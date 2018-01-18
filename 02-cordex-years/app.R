@@ -17,6 +17,8 @@ library(highcharter)
 file_name <- "year_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv"
 data_path <- here::here("output", file_name)
 
+data_path <- here::here("02-cordex-years", "data", file_name)
+
 tb <- read_csv(data_path)
 
 years <- unique(tb$year)
@@ -25,7 +27,7 @@ years <- unique(tb$year)
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Yearly median - All cities"),
+   titlePanel("02-cordex-years"),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -293,11 +295,16 @@ server <- function(input, output) {
       hc_tooltip(pointFormat = "<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y:,.4f}</b><br/>",
                shared = TRUE, crosshairs = TRUE) %>% 
       
-      hc_legend(align = "center", verticalAlign = "bottom", layout = "horizontal")  %>%
+      hc_legend(align = "center", 
+                verticalAlign = "bottom", 
+                layout = "horizontal", 
+                enabled = TRUE)  %>% # to enable/unable data series when clicking on a lengend item 
       
       hc_credits(enabled = TRUE,
                  text = "Sources: CORDEX, GEO-C",
+                 href = "http://geo-c-eu", 
                  style = list(fontSize = "10px")) %>%
+      
       hc_exporting(enabled = TRUE) # enable exporting option
     
     # Determine theme and apply to highchart 
