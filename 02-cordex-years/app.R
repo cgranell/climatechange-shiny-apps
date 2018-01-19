@@ -82,57 +82,57 @@ server <- function(input, output) {
   
   # Calculate data for selected index
   tb_athens <- reactive({
-   tb %>% 
-     filter(between(year(date),input$years[1], input$years[2])) %>%
-     filter(city %in% c('Athens'))
+    tb %>% 
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Athens'))
   })
   
   tb_berlin <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Berlin'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Berlin'))
   })
 
   tb_brussels <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Brussels'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Brussels'))
   })
 
   tb_lisbon <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Lisbon'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Lisbon'))
   })
 
   tb_london <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('London'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('London'))
   })
   
   tb_madrid <- reactive({
     tb %>%
-       filter(between(year(date),input$years[1], input$years[2])) %>%
-       filter(city %in% c('Madrid'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Madrid'))
    })
      
   tb_paris <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Paris')) 
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Paris')) 
   })
   
   tb_rome <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Rome'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Rome'))
   })
   
   tb_warsaw <- reactive({
     tb %>%
-      filter(between(year(date),input$years[1], input$years[2])) %>%
-      filter(city %in% c('Warsaw'))
+      dplyr::filter(between(year(date),input$years[1], input$years[2])) %>%
+      dplyr::filter(city %in% c('Warsaw'))
   })
   
   # Text string of selected years for plot subtitle 
