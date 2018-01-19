@@ -9,15 +9,17 @@
 
 library(shiny)
 
-library(tidyverse)
-library(here)
+# library(tidyverse)
+library(readr)
+library(dplyr)
+
+# library(here)
 library(lubridate)
 library(highcharter)
 
 file_name <- "year_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv"
-data_path <- here::here("output", file_name)
+data_path <- paste0("data/", file_name)
 
-data_path <- here::here("02-cordex-years", "data", file_name)
 
 tb <- read_csv(data_path)
 
