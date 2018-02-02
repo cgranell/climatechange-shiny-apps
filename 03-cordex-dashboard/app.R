@@ -22,26 +22,34 @@ body <- dashboardBody(
   tabItems(
     tabItem("decades",
             fluidRow(
-              valueBoxOutput("modelInfo"),
-              valueBoxOutput("indexInfo"),
-              valueBoxOutput("decadeInfo")
+              infoBoxOutput("modelInfo"),
+              infoBoxOutput("indexInfo"),
+              infoBoxOutput("decadeInfo")
             ),
             fluidRow(
               column(width = 9,
-                box(
-                  width = NULL, status = "info", 
-                  title = "Compare", 
-                  highchartOutput("hcontainer", width="100%", height = "400px")),
-                box(
-                  width = NULL,
-                  title = "Explore data", 
-                  DT::dataTableOutput("dataTable")
-                  # uiOutput("dataTable")
-                )
+                tabBox(
+                   title = "Compare & Explore",
+                   # The id lets us use input$tabset1 on the server to find the current tab
+                   id = "tabset1", width = 12, height = "600px",
+                   selected = "tabChart",
+                   tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "500px")),
+                   tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("dataTable"))
+                 )
+                # box(
+                #   width = NULL, status = "info", 
+                #   title = "Compare", 
+                #   highchartOutput("hcontainer", width="100%", height = "400px")),
+                # box(
+                #   width = NULL,
+                #   title = "Explore data", 
+                #   DT::dataTableOutput("dataTable")
+                #   # uiOutput("dataTable")
+                # )
                 
               ),
               column(width = 3,
-               box(width = NULL, status = "danger",
+                box(width = NULL, status = "danger",
                    selectInput("indexSelected", 
                                label = "Index:",
                                choices = c("Heat Wave Magnitude Index-daily (HWMId)" = "hwmid", 
@@ -58,7 +66,7 @@ body <- dashboardBody(
                                 sep = "",
                                 value = range(years))),
                
-               box(width = NULL,
+                box(width = NULL,
                    selectInput("plotTypeSelected", 
                                label = "Plot type:",
                                choices = c("Spline" = "spline", 
@@ -71,11 +79,11 @@ body <- dashboardBody(
     tabItem("years"),
     tabItem("about", 
             fluidRow(
-              box(title = "Help", status = "warning",
+              box(title = "Help", status = "warning", width = 12,
                   p(
                     class = "text-muted",
-                    paste("Use the Dashboard tab to compare diffent simulation plots. ",
-                          "Use the Explorer tab to examine the raw data in tabular form. ",
+                    paste("Use the Decadal chart tab to compare diffent simulation plots. ", 
+                          "Use the Yearly Explorer tab to examine the raw data in tabular form. ",
                           "To learn more about the project, visit GEO-C project: http://www.geo-c.eu. ",
                           "Application author: Marek Smid.")
                     )
@@ -87,14 +95,10 @@ body <- dashboardBody(
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Decadal charts ", tabName = "decades", icon = icon("bar-chart")),
-    menuItem("Yearly charts", tabName = "years", icon = icon("bar-chart")),
-    menuItem("About", tabName = "about")
-    # box("Use the Dashboard tab to compare diffent simulation plots. ", br(),
-    #     "Use the Explorer tab to examine the raw data in tabular form. ", br(),
-    #     "To learn more about the project, visit GEO-C project: http://www.geo-c.eu. ", br(),
-    #     "Application author: Marek Smid.")
-    )
+    menuItem("Decadal forecast", tabName = "decades", icon = icon("bar-chart")),
+    menuItem("Yearly forecast", tabName = "years", icon = icon("bar-chart")),
+    menuItem("About", tabName = "about", icon = icon("info light"))
+  )
 )
   
 
@@ -109,9 +113,10 @@ ui <- dashboardPage(skin = "blue",
 
 server <- function(input, output) { 
   
-  output$modelInfo <- renderValueBox({
+  output$modelInfo <- renderInfoBox({
     
-    current_model <- "EUR-11_ICHEC-EC-EARTH_rcp85_r1i1p1_KNMI-RACMO22E"
+    # current_model <- "EUR-11_ICHEC-EC-EARTH_rcp85_r1i1p1_KNMI-RACMO22E"
+    current_model <- "CORDEX Model"
     valueBox(
       value = current_model,
       subtitle = "Selected ensemble",
@@ -262,7 +267,7 @@ server <- function(input, output) {
         hc_add_series(name = "Warsaw",
                       data = tb_warsaw()$index_hwmid)
 
-    } else if (input$index == "tn10p") {
+    } else if (input$indexSelected == "tn10p") {
       hc <- hc %>%
         hc_add_series(name = "Athens",
                       data = tb_athens()$index_tn10p) %>%
@@ -282,7 +287,7 @@ server <- function(input, output) {
                       data = tb_rome()$index_tn10p) %>%
         hc_add_series(name = "Warsaw",
                       data = tb_warsaw()$index_tn10p)
-    } else if (input$index == "tn90p") {
+    } else if (input$indexSelected == "tn90p") {
       hc <- hc %>%
         hc_add_series(name = "Athens",
                       data = tb_athens()$index_tn90p) %>%
@@ -302,7 +307,7 @@ server <- function(input, output) {
                       data = tb_rome()$index_tn90p) %>%
         hc_add_series(name = "Warsaw",
                       data = tb_warsaw()$index_tn90p)
-    } else if (input$index == "tx10p") {
+    } else if (input$indexSelected == "tx10p") {
       hc <- hc %>%
         hc_add_series(name = "Athens",
                       data = tb_athens()$index_tx10p) %>%
@@ -346,35 +351,35 @@ server <- function(input, output) {
 
     }
 
-    # hc <- hc %>% 
-    #   hc_xAxis(
-    #     type = "datetime",
-    #     title = list(text = "Decades"),
-    #     opposite = TRUE,
-    #     labels = list(format = "{value}"),
-    #     gridLineWidth = 0.5,
-    #     categories = selected_decades()) %>%
-    #   
-    #   hc_yAxis(
-    #     title = list(text = input$indexSelected),
-    #     min = 0,
-    #     tickInterval = 5,
-    #     minorTickInterval = 2.5) %>%
-    # 
-    #   
-    #   hc_tooltip(pointFormat = "<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y:,.4f}</b><br/>",
-    #              shared = TRUE, crosshairs = TRUE) %>% 
-    #   
-    #   hc_legend(align = "center", 
-    #             verticalAlign = "bottom", 
-    #             layout = "horizontal", 
-    #             enabled = TRUE)  %>% # to enable/unable data series when clicking on a lengend item 
-    #   
-    #   hc_credits(enabled = TRUE,
-    #              text = "Sources: CORDEX, GEO-C",
-    #              href = "http://geo-c-eu", 
-    #              style = list(fontSize = "10px")) %>%
-    #   hc_exporting(enabled = TRUE) # enable exporting option
+    hc <- hc %>%
+      hc_xAxis(
+        type = "datetime",
+        title = list(text = "Decades"),
+        opposite = TRUE,
+        labels = list(format = "{value}"),
+        gridLineWidth = 0.5,
+        categories = selected_decades()) %>%
+
+      hc_yAxis(
+        title = list(text = input$indexSelected),
+        min = 0,
+        tickInterval = 5,
+        minorTickInterval = 2.5) %>%
+
+
+      hc_tooltip(pointFormat = "<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y:,.4f}</b><br/>",
+                 shared = TRUE, crosshairs = TRUE) %>%
+
+      hc_legend(align = "center",
+                verticalAlign = "bottom",
+                layout = "horizontal",
+                enabled = TRUE)  %>% # to enable/unable data series when clicking on a lengend item
+
+      hc_credits(enabled = TRUE,
+                 text = "Sources: CORDEX, GEO-C",
+                 href = "http://geo-c-eu",
+                 style = list(fontSize = "10px")) %>%
+      hc_exporting(enabled = TRUE) # enable exporting option
   
     
     # Print highchart 
