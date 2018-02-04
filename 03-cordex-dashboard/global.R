@@ -7,9 +7,7 @@ library(lubridate)
 indices <- structure(c("hwmid", "tn10p"), 
                      .Names = c("Heat Wave Magnitude Index-daily (HWMId)", "Cold nights (TN10P)"))
 
-
-url_decade <- "https://raw.githubusercontent.com/cgranell/climatechange-shiny-apps/master/01-cordex-decades/data/dec_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv"
-
+url_decade <- "https://raw.githubusercontent.com/cgranell/climatechange-viz/master/output/dec_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv?token=AFqiACzgr_kV__sNgG9-xHmLv_Bdo3Ptks5agFxCwA%3D%3D"
 tb_decade <- read_csv(url_decade)
 
 years <- unique(tb_decade$year)

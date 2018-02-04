@@ -7,7 +7,7 @@
 
 library(shiny)
 library(shinydashboard)
-library(shinythemes)
+# library(shinythemes)
 library(highcharter)
 library(DT)
 
@@ -69,9 +69,12 @@ body <- dashboardBody(
                 box(width = NULL,
                    selectInput("plotTypeSelected", 
                                label = "Plot type:",
-                               choices = c("Spline" = "spline", 
+                               choices = c("Line (spline)" = "spline", 
                                            "Line" = "line",
-                                           "Bar" = "column")))
+                                           "Bar" = "column",
+                                           "Scatter" = "scatter",
+                                           "Area" = "area",
+                                           "Area (spline)" = "areaspline")))
                 
               )
             )
@@ -128,13 +131,6 @@ server <- function(input, output) {
   
   output$indexInfo <- renderInfoBox({
     
-    # current_index <- switch(input$indexSelected,
-    #          hwmid = "Heat Wave Magnitude Index-daily (HWMId)",
-    #          tn10p = "Cold nights (TN10P)",
-    #          tn90p = "Warm nights (TN90P)",
-    #          tx10p = "Cold days (TX10P)",
-    #          tx90p = "Warm days (TX90P)")
-    # 
     current_index = input$indexSelected
     valueBox(
       value = current_index,
@@ -173,55 +169,64 @@ server <- function(input, output) {
   tb_athens <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Athens'))
+      filter(city %in% c('Athens')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_berlin <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Berlin'))
+      filter(city %in% c('Berlin')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_brussels <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Brussels'))
+      filter(city %in% c('Brussels')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_lisbon <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Lisbon'))
+      filter(city %in% c('Lisbon')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_london <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('London'))
+      filter(city %in% c('London')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_madrid <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Madrid'))
+      filter(city %in% c('Madrid')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_paris <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Paris'))
+      filter(city %in% c('Paris')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_rome <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Rome'))
+      filter(city %in% c('Rome')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   tb_warsaw <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
-      filter(city %in% c('Warsaw'))
+      filter(city %in% c('Warsaw')) %>%
+      filter(index %in% input$indexSelected)
   })
   
   
@@ -240,117 +245,26 @@ server <- function(input, output) {
   output$hcontainer <- renderHighchart({
     
     hc <- highchart() %>% 
-      hc_chart(type = input$plotTypeSelected)  
+      hc_chart(type = input$plotTypeSelected)  %>%
+      hc_add_series(name = "Athens",
+                    data = tb_athens()$value) %>%
+      hc_add_series(name = "Berlin",
+                    data = tb_berlin()$value) %>%
+      hc_add_series(name = "Brussels",
+                    data = tb_brussels()$value) %>%
+      hc_add_series(name = "Lisbon",
+                    data = tb_lisbon()$value) %>%
+      hc_add_series(name = "London",
+                    data = tb_london()$value) %>%
+      hc_add_series(name = "Madrid",
+                    data = tb_madrid()$value) %>%
+      hc_add_series(name = "Paris",
+                    data = tb_paris()$value) %>%
+      hc_add_series(name = "Rome",
+                    data = tb_rome()$value) %>%
+      hc_add_series(name = "Warsaw",
+                    data = tb_warsaw()$v)
     
-    if (input$indexSelected == "hwmid") {
-      # if (!is.null(tb_athens)) {
-      #   hc <- hc %>%
-      #   hc_add_series(name = "Athens",
-      #                 data = tb_athens()$index_hwmid)}
-      hc <- hc %>%
-        hc_add_series(name = "Athens",
-                      data = tb_athens()$index_hwmid) %>%
-        hc_add_series(name = "Berlin",
-                      data = tb_berlin()$index_hwmid) %>%
-        hc_add_series(name = "Brussels",
-                      data = tb_brussels()$index_hwmid) %>%
-        hc_add_series(name = "Lisbon",
-                      data = tb_lisbon()$index_hwmid) %>%
-        hc_add_series(name = "London",
-                      data = tb_london()$index_hwmid) %>%
-        hc_add_series(name = "Madrid",
-                      data = tb_madrid()$index_hwmid) %>%
-        hc_add_series(name = "Paris",
-                      data = tb_paris()$index_hwmid) %>%
-        hc_add_series(name = "Rome",
-                      data = tb_rome()$index_hwmid) %>%
-        hc_add_series(name = "Warsaw",
-                      data = tb_warsaw()$index_hwmid)
-
-    } else if (input$indexSelected == "tn10p") {
-      hc <- hc %>%
-        hc_add_series(name = "Athens",
-                      data = tb_athens()$index_tn10p) %>%
-        hc_add_series(name = "Berlin",
-                      data = tb_berlin()$index_tn10p) %>%
-        hc_add_series(name = "Brussels",
-                      data = tb_brussels()$index_tn10p) %>%
-        hc_add_series(name = "Lisbon",
-                      data = tb_lisbon()$index_tn10p) %>%
-        hc_add_series(name = "London",
-                      data = tb_london()$index_tn10p)  %>%
-        hc_add_series(name = "Madrid",
-                      data = tb_madrid()$index_tn10p) %>%
-        hc_add_series(name = "Paris",
-                      data = tb_paris()$index_tn10p) %>%
-        hc_add_series(name = "Rome",
-                      data = tb_rome()$index_tn10p) %>%
-        hc_add_series(name = "Warsaw",
-                      data = tb_warsaw()$index_tn10p)
-    } else if (input$indexSelected == "tn90p") {
-      hc <- hc %>%
-        hc_add_series(name = "Athens",
-                      data = tb_athens()$index_tn90p) %>%
-        hc_add_series(name = "Berlin",
-                      data = tb_berlin()$index_tn90p) %>%
-        hc_add_series(name = "Brussels",
-                      data = tb_brussels()$index_tn90p) %>%
-        hc_add_series(name = "Lisbon",
-                      data = tb_lisbon()$index_tn90p) %>%
-        hc_add_series(name = "London",
-                      data = tb_london()$index_tn90p) %>%
-        hc_add_series(name = "Madrid",
-                      data = tb_madrid()$index_tn90p) %>%
-        hc_add_series(name = "Paris",
-                      data = tb_paris()$index_tn90p) %>%
-        hc_add_series(name = "Rome",
-                      data = tb_rome()$index_tn90p) %>%
-        hc_add_series(name = "Warsaw",
-                      data = tb_warsaw()$index_tn90p)
-    } else if (input$indexSelected == "tx10p") {
-      hc <- hc %>%
-        hc_add_series(name = "Athens",
-                      data = tb_athens()$index_tx10p) %>%
-        hc_add_series(name = "Berlin",
-                      data = tb_berlin()$index_tx10p) %>%
-        hc_add_series(name = "Brussels",
-                      data = tb_brussels()$index_tx10p) %>%
-        hc_add_series(name = "Lisbon",
-                      data = tb_lisbon()$index_tx10p) %>%
-        hc_add_series(name = "London",
-                      data = tb_london()$index_tx10p)  %>%
-        hc_add_series(name = "Madrid",
-                      data = tb_madrid()$index_tx10p) %>%
-        hc_add_series(name = "Paris",
-                      data = tb_paris()$index_tx10p) %>%
-        hc_add_series(name = "Rome",
-                      data = tb_rome()$index_tx10p) %>%
-        hc_add_series(name = "Warsaw",
-                      data = tb_warsaw()$index_tx10p)
-
-    } else {
-      hc <- hc %>%
-        hc_add_series(name = "Athens",
-                      data = tb_athens()$index_tx90p) %>%
-        hc_add_series(name = "Berlin",
-                      data = tb_berlin()$index_tx90p) %>%
-        hc_add_series(name = "Brussels",
-                      data = tb_brussels()$index_tx90p) %>%
-        hc_add_series(name = "Lisbon",
-                      data = tb_lisbon()$index_tx90p) %>%
-        hc_add_series(name = "London",
-                      data = tb_london()$index_tx90p) %>%
-        hc_add_series(name = "Madrid",
-                      data = tb_madrid()$index_tx90p) %>%
-        hc_add_series(name = "Paris",
-                      data = tb_paris()$index_tx90p) %>%
-        hc_add_series(name = "Rome",
-                      data = tb_rome()$index_tx90p) %>%
-        hc_add_series(name = "Warsaw",
-                      data = tb_warsaw()$index_tx90p)
-
-    }
-
     hc <- hc %>%
       hc_xAxis(
         type = "datetime",
