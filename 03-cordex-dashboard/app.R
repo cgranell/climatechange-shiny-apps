@@ -31,11 +31,11 @@ body <- dashboardBody(
                 tabBox(
                    title = "Compare & Explore",
                    # The id lets us use input$tabset1 on the server to find the current tab
-                   id = "tabset1", width = 12, height = "600px",
+                   id = "tabset1", width = 12, height = "550px",
                    selected = "tabChart",
-                   tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "500px")),
+                   tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "100%")),
                    tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("dataTable"))
-                 )
+                 ),
                 # box(
                 #   width = NULL, status = "info", 
                 #   title = "Compare", 
@@ -44,9 +44,13 @@ body <- dashboardBody(
                 #   width = NULL,
                 #   title = "Explore data", 
                 #   DT::dataTableOutput("dataTable")
-                #   # uiOutput("dataTable")
                 # )
-                
+                box(
+                  width = 12,
+                  title = "Sparklines",
+                  DT::dataTableOutput("sparklineTable")
+                )
+            
               ),
               column(width = 3,
                 box(width = NULL, status = "danger",
@@ -66,6 +70,9 @@ body <- dashboardBody(
                                 sep = "",
                                 value = range(years))),
                
+                
+                # helpText("Click the column header to sort a column."),
+                
                 box(width = NULL,
                    selectInput("plotTypeSelected", 
                                label = "Plot type:",
@@ -308,10 +315,15 @@ server <- function(input, output) {
   #     arrange(city)         
   #   }, striped = TRUE, hover = TRUE, width = "100%", digits = 2)  
   # 
+  
   output$dataTable <- DT::renderDataTable({
-    tb_decade %>%
+    tb_decade_table <- tb_decade %>%
+      filter(index %in% input$indexSelected) %>%
+      filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       select(-year, -tmstmp, -date) %>%
-      arrange(city)         
+      arrange(city)       
+    
+    DT::datatable(tb_decade_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
   })
   
   
