@@ -33,7 +33,7 @@ body <- dashboardBody(
                    # The id lets us use input$tabset1 on the server to find the current tab
                    id = "tabset1", width = 12, height = "550px",
                    selected = "tabChart",
-                   tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "100%")),
+                   tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "500px")),
                    tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("dataTable"))
                  ),
                 # box(
@@ -47,7 +47,8 @@ body <- dashboardBody(
                 # )
                 box(
                   width = 12,
-                  title = "Sparklines",
+                  #title = "Sparklines",
+                  htmlwidgets::getDependency('sparkline'),  
                   DT::dataTableOutput("sparklineTable")
                 )
             
@@ -326,6 +327,19 @@ server <- function(input, output) {
     DT::datatable(tb_decade_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
   })
   
+  
+  output$sparklineTable <- DT::renderDataTable(
+    # 
+    # 
+    # expr = spark_data,
+    # escape = FALSE,
+    # ###  and this <------------
+    # options = list(
+    #   drawCallback =  cb
+    # )
+    DT::datatable(tb_spark, escape= FALSE, 
+                  options = list(drawCallback =  cb, lengthMenu = c(5, 10), pageLength = 5, language = list(search = 'Filter:')))
+  )
   
 }
 
