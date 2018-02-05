@@ -16,60 +16,43 @@ years <- unique(tb_decade$year)
 decades <- unique(tb_decade$decade)
 
 
-# create data with sparklines
-spark_data <- data.frame(
-  id = c('spark1', 'spark2'),
-  spark = c(
-    spk_chr(values = 1:3, elementId = 'spark1'),
-    spk_chr(values = 3:1, elementId = 'spark2')
-  )
-)
-
-
+# prepare data for sparklines
 tb_spark <- tb_decade %>%
   spread(key = "index", value = "value") %>%
   select(-tmstmp, -date, -year) %>%
   group_by(city) %>%
   summarise(
-    sp_hwmid = spk_chr(
+    hwmid = spk_chr(
       hwmid, 
       type="bar"
       #chartRangeMin=0, 
       #chartRangeMax=max(tb_decade$hwmid)
+    ),
+    tn10p = spk_chr(
+      tn10p, 
+      type="line"
+    ),
+    tn90p = spk_chr(
+      tn90p, 
+      type="line"
+    ),
+    tx10p = spk_chr(
+      tx10p, 
+      type="line",
+      lineColor = 'black', 
+      fillColor = '#ccc'
+    ),
+    tx90p = spk_chr(
+      tx90p, 
+      type="line",
+      lineColor = 'black', 
+      fillColor = '#ccc'
     )
+    
   ) 
 
-# tb_spark <- tb_spark %>%
-#   summarise(
-#     sp_hwmid = spk_chr(
-#       tb_spark$hwmid, 
-#       type="line",
-#       chartRangeMin=0, 
-#       chartRangeMax=max(tb_spark$hwmid)
-#     )
-#   ) #%>% as.data.frame()
-# 
-#   # group_by(city)
-
-
-###  adding this <------------
+# Required Call back function to put sparklines into DT tables 
 cb <- htmlwidgets::JS('function(){debugger;HTMLWidgets.staticRender();}')
 
-library(formattable)
 
-x <- mtcars %>%
-  group_by(cyl) %>%
-  summarise(
-    hp = spk_chr(
-      hp, type="box",
-      chartRangeMin=0, chartRangeMax=max(mtcars$hp)
-    ),
-    mpg = spk_chr(
-      mpg, type="box",
-      chartRangeMin=0, chartRangeMax=max(mtcars$mpg)
-    )
-  ) %>%
-  formattable() 
-
-sparkline(x)
 

@@ -329,16 +329,12 @@ server <- function(input, output) {
   
   
   output$sparklineTable <- DT::renderDataTable(
-    # 
-    # 
-    # expr = spark_data,
-    # escape = FALSE,
-    # ###  and this <------------
-    # options = list(
-    #   drawCallback =  cb
-    # )
-    DT::datatable(tb_spark, escape= FALSE, 
-                  options = list(drawCallback =  cb, lengthMenu = c(5, 10), pageLength = 5, language = list(search = 'Filter:')))
+    DT::datatable(tb_spark, 
+                  escape= FALSE, 
+                  options = list(drawCallback =  cb, 
+                                 lengthMenu = c(5, 10), 
+                                 pageLength = 5, 
+                                 language = list(search = 'Filter:')))
   )
   
 }
