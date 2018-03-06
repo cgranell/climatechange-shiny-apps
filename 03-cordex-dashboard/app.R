@@ -87,7 +87,73 @@ body <- dashboardBody(
               )
             )
           ),
-    tabItem("years"),
+    tabItem("years",
+            fluidRow(
+              infoBoxOutput("yearModelInfo"),
+              infoBoxOutput("yearIndexInfo"),
+              infoBoxOutput("yearInfo")
+            ),
+            fluidRow(
+              column(width = 9,
+                     tabBox(
+                       title = "Compare & Explore",
+                       # The id lets us use input$tabset1 on the server to find the current tab
+                       id = "tabset1", width = 12, height = "550px",
+                       selected = "tabChart",
+                       tabPanel(title = "Compare", value = "tabChart", highchartOutput("yearHighChart", width="100%", height = "500px")),
+                       tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("yearDataTable"))
+                     )#,
+                     # box(
+                     #   width = 12,
+                     #   #title = "Sparklines",
+                     #   htmlwidgets::getDependency('sparkline'),  
+                     #   DT::dataTableOutput("sparklineTable")
+                     # )
+                     
+              ),
+              column(width = 3,
+                     box(width = NULL, status = "danger",
+                         selectInput("yearIndexSelected", 
+                                     label = "Index:",
+                                     choices = c("Heat Wave Magnitude Index-daily (HWMId)" = "hwmid", 
+                                                 "Cold nights (TN10P)" = "tn10p",
+                                                 "Warm nights (TN90P)" = "tn90p",
+                                                 "Cold days (TX10P)" = "tx10p",
+                                                 "Warm days (TX90P)" = "tx90p",
+                                                 "Description (TNN)" = "tnn",
+                                                 "Description (TNX)" = "tnx",
+                                                 "Description (TXX)" = "txx"))),
+                     box(width = NULL, status = "warning",
+                         sliderInput("yearSelected",
+                                     "Years:",
+                                     min = min(years_list),
+                                     max = max(years_list),
+                                     step = 1, # year 
+                                     sep = "",
+                                     value = range(years_list))),
+                     
+                     
+                     # helpText("Click the column header to sort a column."),
+                     
+                     box(width = NULL,
+                         selectInput("yearPlotTypeSelected", 
+                                     label = "Plot type:",
+                                     choices = c("Line (spline)" = "spline", 
+                                                 "Line" = "line",
+                                                 "Bar" = "column",
+                                                 "Scatter" = "scatter",
+                                                 "Area" = "area",
+                                                 "Area (spline)" = "areaspline")))
+                     
+              )
+            )
+            
+            
+            
+            
+          ),
+    
+    
     tabItem("about", 
             fluidRow(
               box(title = "Help", status = "warning", width = 12,
@@ -123,6 +189,10 @@ ui <- dashboardPage(skin = "blue",
 
 
 server <- function(input, output) { 
+  
+  ########################
+  ## DECADAL FORECAST PAGE
+  ########################
   
   output$modelInfo <- renderInfoBox({
     
@@ -271,7 +341,7 @@ server <- function(input, output) {
       hc_add_series(name = "Rome",
                     data = tb_rome()$value) %>%
       hc_add_series(name = "Warsaw",
-                    data = tb_warsaw()$v)
+                    data = tb_warsaw()$value)
     
     hc <- hc %>%
       hc_xAxis(
@@ -336,6 +406,135 @@ server <- function(input, output) {
                                  pageLength = 5, 
                                  language = list(search = 'Filter:')))
   )
+  
+  
+  ########################
+  ## YEARLY FORECAST PAGE
+  ########################
+  
+  
+  output$yearModelInfo <- renderInfoBox({
+    
+    # current_model <- "ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4"
+    current_model <- "CORDEX Model"
+    valueBox(
+      value = current_model,
+      subtitle = "Selected ensemble",
+      color = "light-blue",
+      icon = icon("cog", lib = "glyphicon")
+    )
+  })
+  
+  
+  output$yearIndexInfo <- renderInfoBox({
+    
+    current_index = input$yearIndexSelected
+    valueBox(
+      value = current_index,
+      subtitle = "Selected index",
+      color = "red",
+      icon = icon("list")
+    )
+  })
+  
+  
+  output$yearInfo <- renderInfoBox({
+    if(input$yearSelected[1] == input$yearSelected[2]) { 
+        current_years <- as.character(input$yearSelected[1])
+    } else {
+      current_years <- paste("Between ",input$yearSelected[1], " and ", input$yearSelected[2])
+    }
+    
+    valueBox(
+      value = current_years,
+      color = "yellow",
+      subtitle = "Selected years",
+      icon = icon("calendar")
+    )
+  })
+  
+  
+  # Recalculate data series for current selection ()
+  tb_year_athens <- reactive({
+    tb_year %>%
+      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+      filter(city %in% c('Athens')) %>%
+      filter(index %in% input$yearIndexSelected)
+  })
+  
+  tb_year_berlin <- reactive({
+    tb_year %>%
+      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+      filter(city %in% c('Berlin')) %>%
+      filter(index %in% input$yearIndexSelected)
+  })
+  
+  tb_year_brussels <- reactive({
+    tb_year %>%
+      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+      filter(city %in% c('Brussels')) %>%
+      filter(index %in% input$yearIndexSelected)
+  })
+  
+  
+  # Range of selected years for updating plot's xAxis categories  
+  selected_years <- reactive({
+    index_year_min = which(years_list == input$yearSelected[1])
+    index_year_max = which(years_list == input$yearSelected[2])
+    years_list[index_year_min:index_year_max]
+  })
+  
+  
+  # Highchart -------------------------------------------------------
+  output$yearHighChart <- renderHighchart({
+    
+    hc <- highchart() %>% 
+      hc_chart(type = input$yearPlotTypeSelected)  %>%
+      hc_add_series(name = "Athens",
+                    data = tb_year_athens()$value) %>%
+      hc_add_series(name = "Berlin",
+                    data = tb_year_berlin()$value) %>%
+      hc_add_series(name = "Brussels",
+                    data = tb_year_brussels()$value)
+      
+    hc <- hc %>%
+      hc_xAxis(
+        type = "datetime",
+        title = list(text = "Years"),
+        opposite = TRUE,
+        labels = list(format = "{value}"),
+        gridLineWidth = 0.5,
+        categories = selected_years()) %>%
+      
+      hc_yAxis(
+        title = list(text = input$yearIndexSelected),
+        min = 0,
+        tickInterval = 5,
+        minorTickInterval = 2.5) %>%
+    
+
+      hc_tooltip(pointFormat = "<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y:,.4f}</b><br/>",
+                 shared = TRUE, crosshairs = TRUE) %>%
+      
+      hc_legend(align = "center",
+                verticalAlign = "bottom",
+                layout = "horizontal",
+                enabled = TRUE)  %>% # to enable/unable data series when clicking on a lengend item
+      
+      hc_credits(enabled = TRUE,
+                 text = "Sources: CORDEX, GEO-C",
+                 href = "http://geo-c-eu",
+                 style = list(fontSize = "10px")) %>%
+      hc_exporting(enabled = TRUE) # enable exporting option
+    
+    
+    # Print highchart 
+    hc  
+    
+  })
+  
+  
+  
   
 }
 
