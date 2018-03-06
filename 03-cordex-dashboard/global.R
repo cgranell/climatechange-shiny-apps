@@ -18,7 +18,7 @@ decades <- unique(tb_decade$decade)
 url_year <- "http://giv-oct2.uni-muenster.de:5000/dataset/0c080c72-b89f-48b6-aff5-c18a70b0526d/resource/d9ae799c-9564-4047-8a44-f5bdd25ab2cb/download/yearly_ichec-ec-earth_rcp85_r12i1p1_smhi-rca4_8_indices_30_cities.csv"
 tb_year <- read_csv(url_year)
 years_list <- unique(tb_year$year)
-
+cities_list <- unique(tb_year$city)
 
 # prepare data for sparklines
 tb_spark <- tb_decade %>%

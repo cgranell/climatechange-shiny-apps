@@ -133,6 +133,15 @@ body <- dashboardBody(
                                      value = range(years_list))),
                      
                      
+                     # box for city
+                     
+                     box(width = NULL, status = "warning",
+                         uiOutput("yearCityBox")
+                         # selectizeInput("yearCitySelected", label = "City:", choices = NULL, 
+                         #                options = list(placeholder = "Type a city name, e.g. Athens", maxOptions = 5)
+                         # )
+                     ),
+                     
                      # helpText("Click the column header to sort a column."),
                      
                      box(width = NULL,
@@ -188,7 +197,7 @@ ui <- dashboardPage(skin = "blue",
 
 
 
-server <- function(input, output) { 
+server <- function(input, output, session) { 
   
   ########################
   ## DECADAL FORECAST PAGE
@@ -454,6 +463,65 @@ server <- function(input, output) {
   })
   
   
+  
+  # FLags: https://github.com/hjnilsson/country-flags/tree/master/png100px
+  # Help:  http://shiny.leg.ufpr.br/daniel/
+  #        https://github.com/selectize/selectize.js/blob/master/docs/usage.md
+  #        https://www.r-bloggers.com/bike-services-api-shiny-nice-app/
+  
+  
+  
+  # # update the render function for selectize
+  # updateSelectizeInput(
+  #   session, 'yearCitySelected', server = TRUE, 
+  #   #choices = c(`Athens` = "Athens", `Berlin` = "Berlin", `Brussels` = "Brussels"), #cities_list,
+  #   choices = cities_list,
+  #   options = list(
+  #     create = FALSE,
+  #     #valueField = 'url',
+  #     labelField = 'name',
+  #     searchField = 'name',
+  #     #options = list(),
+  #     render = I(
+  #       "{
+  #         option: function(item, escape) {
+  #         return '<div>' +
+  #           '<img src=\"images/flag/' + 
+  #           (item.name) + 
+  #           '.png\" width=20 />'  +
+  #           '&nbsp; &nbsp; &nbsp;' + 
+  #           escape(item.name) +
+  #           '</div>';
+  #         }
+  #       }"))
+  #   )
+  
+  
+  output$yearCityBox = renderUI({
+      selectizeInput('yearCitySelected', 'City:', 
+                      choices = cities_list, selected = "Athens",
+                      options = list(
+                        valueField = 'url',
+                        labelField = 'name',
+                        searchField = 'name',
+                        options = list(),
+                        create = FALSE,
+                        #To add the flag next to the countries
+                        render = I(
+                          '{
+                            option: function(item, escape) {
+                              return "<div>" +
+                                  "<img src=\'/images/flag/" +
+                                    item.name +
+                                    ".png\' width=20 />"  +
+                                    "&nbsp; &nbsp; &nbsp;" +
+                                    escape(item.name) +
+                                    "</div>";
+                                    }
+                                  }')))
+  })
+
+
   # Recalculate data series for current selection ()
   tb_year_athens <- reactive({
     tb_year %>%
