@@ -20,6 +20,9 @@ header <- dashboardHeader(
 
 body <- dashboardBody(
   tabItems(
+    ##########
+    ## DECADAL FORECAST MENU ITEM
+    ##########
     tabItem("decades",
             fluidRow(
               infoBoxOutput("modelInfo"),
@@ -87,6 +90,9 @@ body <- dashboardBody(
               )
             )
           ),
+    ##########
+    ## YEARLY FORECAST MENU ITEM
+    ##########
     tabItem("years",
             fluidRow(
               infoBoxOutput("yearModelInfo"),
@@ -136,10 +142,14 @@ body <- dashboardBody(
                      # box for city
                      
                      box(width = NULL, status = "warning",
-                         uiOutput("yearCityBox")
-                         # selectizeInput("yearCitySelected", label = "City:", choices = NULL, 
-                         #                options = list(placeholder = "Type a city name, e.g. Athens", maxOptions = 5)
-                         # )
+                         #uiOutput("yearCityBox")
+                         selectizeInput("yearCitiesSelected", label = "City:", choices = list(
+                                          Southern = c(`Lisbon` = "Lisbon", `Madrid` = "Madrid"),
+                                          Central = c(`Amsterdam` = 'Amsterdam', `Berlin` = "Berlin"),
+                                          Western = c(`Bratislava` = "Bratislava", `Moscow` = "Moscow"),
+                                          Northern = c(`Stockholm` = "Stockholm", `Helsinki` = "Helsinki")),
+                                        multiple = TRUE,
+                                        options = list(placeholder = "Type a city name, e.g. Athens"))
                      ),
                      
                      # helpText("Click the column header to sort a column."),
@@ -473,7 +483,7 @@ server <- function(input, output, session) {
   
   # # update the render function for selectize
   # updateSelectizeInput(
-  #   session, 'yearCitySelected', server = TRUE, 
+  #   session, 'yearCitiesSelected', server = TRUE, 
   #   #choices = c(`Athens` = "Athens", `Berlin` = "Berlin", `Brussels` = "Brussels"), #cities_list,
   #   choices = cities_list,
   #   options = list(
@@ -497,52 +507,70 @@ server <- function(input, output, session) {
   #   )
   
   
-  output$yearCityBox = renderUI({
-      selectizeInput('yearCitySelected', 'City:', 
-                      choices = cities_list, selected = "Athens",
-                      options = list(
-                        valueField = 'url',
-                        labelField = 'name',
-                        searchField = 'name',
-                        options = list(),
-                        create = FALSE,
-                        #To add the flag next to the countries
-                        render = I(
-                          '{
-                            option: function(item, escape) {
-                              return "<div>" +
-                                  "<img src=\'/images/flag/" +
-                                    item.name +
-                                    ".png\' width=20 />"  +
-                                    "&nbsp; &nbsp; &nbsp;" +
-                                    escape(item.name) +
-                                    "</div>";
-                                    }
-                                  }')))
+  # output$yearCityBox = renderUI({
+  #     selectizeInput('yearCitiesSelected', 'City:', 
+  #                     choices = cities_list, 
+  #                     multiple = TRUE,
+  #                     selected = "Athens",
+  #                     options = list(
+  #                       valueField = 'url',
+  #                       labelField = 'name',
+  #                       searchField = 'name',
+  #                       options = list(),
+  #                       create = FALSE)) #,
+  #                       # #To add the flag next to the countries
+  #                       # render = I(
+  #                       #   '{
+  #                       #     option: function(item, escape) {
+  #                       #       return "<div>" +
+  #                       #           "<img src=\'/images/flag/" +
+  #                       #             item.name +
+  #                       #             ".png\' width=20 />"  +
+  #                       #             "&nbsp; &nbsp; &nbsp;" +
+  #                       #             escape(item.name) +
+  #                       #             "</div>";
+  #                       #             }
+  #                       #           }')))
+  # })
+
+  
+  # Recalculate data series for current selection of cities
+  selected_cities <- reactive({
+    list_cities <- list()
+    if (length(input$yearCitiesSelected)>0) {
+      for (c in input$yearCitiesSelected) {
+        list_cities[[c]] <- tb_year %>%
+          filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+          filter(city %in% c) %>%
+          filter(index %in% input$yearIndexSelected)
+      }
+    }
+    list_cities
   })
-
-
+  
+  
   # Recalculate data series for current selection ()
-  tb_year_athens <- reactive({
-    tb_year %>%
-      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-      filter(city %in% c('Athens')) %>%
-      filter(index %in% input$yearIndexSelected)
-  })
-  
-  tb_year_berlin <- reactive({
-    tb_year %>%
-      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-      filter(city %in% c('Berlin')) %>%
-      filter(index %in% input$yearIndexSelected)
-  })
-  
-  tb_year_brussels <- reactive({
-    tb_year %>%
-      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-      filter(city %in% c('Brussels')) %>%
-      filter(index %in% input$yearIndexSelected)
-  })
+  # tb_year_athens <- reactive({
+  #   tb_year %>%
+  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+  #     filter(city %in% c('Athens')) %>%
+  #     filter(index %in% input$yearIndexSelected)
+  # })
+  # 
+  # tb_year_berlin <- reactive({
+  #   tb_year %>%
+  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+  #     filter(city %in% c('Berlin')) %>%
+  #     filter(index %in% input$yearIndexSelected)
+  # })
+  # 
+  # tb_year_brussels <- reactive({
+  #   tb_year %>%
+  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+  #     filter(city %in% c('Brussels')) %>%
+  #     filter(index %in% input$yearIndexSelected)
+  # })
+  # 
   
   
   # Range of selected years for updating plot's xAxis categories  
@@ -557,13 +585,21 @@ server <- function(input, output, session) {
   output$yearHighChart <- renderHighchart({
     
     hc <- highchart() %>% 
-      hc_chart(type = input$yearPlotTypeSelected)  %>%
-      hc_add_series(name = "Athens",
-                    data = tb_year_athens()$value) %>%
-      hc_add_series(name = "Berlin",
-                    data = tb_year_berlin()$value) %>%
-      hc_add_series(name = "Brussels",
-                    data = tb_year_brussels()$value)
+      hc_chart(type = input$yearPlotTypeSelected) 
+      # hc_add_series(name = "Athens",
+      #               data = tb_year_athens()$value) %>%
+      # hc_add_series(name = "Berlin",
+      #               data = tb_year_berlin()$value) %>%
+      # hc_add_series(name = "Brussels",
+      #               data = tb_year_brussels()$value)
+    
+    if (!is.null(names(selected_cities()))) {
+        for (cityname in names(selected_cities())) {
+          hc <- hc %>%
+            hc_add_series(name = cityname,
+                          data = selected_cities()[[cityname]]$value)
+        }
+    }
       
     hc <- hc %>%
       hc_xAxis(
