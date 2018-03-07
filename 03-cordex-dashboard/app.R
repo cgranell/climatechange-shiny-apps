@@ -38,16 +38,22 @@ body <- dashboardBody(
                    selected = "tabChart",
                    tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "500px")),
                    tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("dataTable"))
-                 ),
-                box(
-                  width = 12,
-                  #title = "Sparklines",
-                  htmlwidgets::getDependency('sparkline'),  
-                  DT::dataTableOutput("sparklineTable")
-                )
+                 )#,
+                # box(
+                #   width = 12,
+                #   #title = "Sparklines",
+                #   htmlwidgets::getDependency('sparkline'),  
+                #   DT::dataTableOutput("sparklineTable")
+                # )
             
               ),
               column(width = 3,
+                     
+                box(width = NULL, status = "danger",
+                   selectInput("modelSelected", 
+                               label = "Model:",
+                               choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC-EC-EARTH"))),
+                     
                 box(width = NULL, status = "danger",
                    selectInput("indexSelected", 
                                label = "Index:",
@@ -99,16 +105,21 @@ body <- dashboardBody(
                        selected = "tabChart",
                        tabPanel(title = "Compare", value = "tabChart", highchartOutput("yearHighChart", width="100%", height = "500px")),
                        tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("yearDataTable"))
-                     ),
-                    box(
-                      width = 12,
-                      #title = "Sparklines",
-                      htmlwidgets::getDependency('sparkline'),  
-                      DT::dataTableOutput("yearSparklineTable")
-                    )
+                     )#,
+                    # box(
+                    #   width = 12,
+                    #   #title = "Sparklines",
+                    #   htmlwidgets::getDependency('sparkline'),  
+                    #   DT::dataTableOutput("yearSparklineTable")
+                    # )
                      
               ),
               column(width = 3,
+                     box(width = NULL, status = "danger",
+                         selectInput("yearModelSelected", 
+                                     label = "Model:",
+                                     choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC-EC-EARTH"))),
+                     
                      box(width = NULL, status = "danger",
                          selectInput("yearIndexSelected", 
                                      label = "Index:",
@@ -131,7 +142,6 @@ body <- dashboardBody(
                      
                      
                      # box for city
-                     
                      box(width = NULL, status = "warning",
                          #uiOutput("yearCityBox")
                          selectizeInput("yearCitiesSelected", label = "City:", choices = list(
@@ -159,9 +169,28 @@ body <- dashboardBody(
             )
             
             
-            
-            
           ),
+    
+    ##########
+    ## SPARKLINES MENU ITEM
+    ##########
+    tabItem("sparklines",
+            fluidRow(
+              column(width = 12,
+                     box(
+                       width = 12,
+                       title = "Sparklines",
+                       htmlwidgets::getDependency('sparkline'),  
+                       DT::dataTableOutput("sparklineTable")
+                     ),
+                     box(
+                       width = 12,
+                       #title = "Sparklines",
+                       htmlwidgets::getDependency('sparkline'),  
+                       DT::dataTableOutput("yearSparklineTable")
+                     )))
+                    
+    ),
     
     ##########
     ## ABOUT MENU ITEM
@@ -184,9 +213,10 @@ body <- dashboardBody(
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Decadal forecast", tabName = "decades", icon = icon("bar-chart")),
-    menuItem("Yearly forecast", tabName = "years", icon = icon("bar-chart")),
-    menuItem("About", tabName = "about", icon = icon("info light"))
+    menuItem("Decadal forecast", tabName = "decades", icon = icon("bar-chart", lib="font-awesome")),
+    menuItem("Yearly forecast", tabName = "years", icon = icon("bar-chart", lib="font-awesome")),
+    menuItem("Sparklines", tabName = "sparklines", icon = icon("line-chart", lib="font-awesome")),
+    menuItem("About", tabName = "about", icon = icon("info light", lib="font-awesome"))
   )
 )
   
@@ -209,7 +239,8 @@ server <- function(input, output, session) {
   output$modelInfo <- renderInfoBox({
     
     # current_model <- "EUR-11_ICHEC-EC-EARTH_rcp85_r1i1p1_KNMI-RACMO22E"
-    current_model <- "CORDEX Model"
+    #current_model <- "CORDEX Model"
+    current_model <- input$modelSelected
     valueBox(
       value = current_model,
       subtitle = "Selected ensemble",
@@ -428,7 +459,8 @@ server <- function(input, output, session) {
   output$yearModelInfo <- renderInfoBox({
     
     # current_model <- "ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4"
-    current_model <- "CORDEX Model"
+    # current_model <- "CORDEX Model"
+    current_model <- input$modelSelected
     valueBox(
       value = current_model,
       subtitle = "Selected ensemble",
