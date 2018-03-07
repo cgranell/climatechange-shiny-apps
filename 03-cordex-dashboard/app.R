@@ -39,15 +39,6 @@ body <- dashboardBody(
                    tabPanel(title = "Compare", value = "tabChart", highchartOutput("hcontainer", width="100%", height = "500px")),
                    tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("dataTable"))
                  ),
-                # box(
-                #   width = NULL, status = "info", 
-                #   title = "Compare", 
-                #   highchartOutput("hcontainer", width="100%", height = "400px")),
-                # box(
-                #   width = NULL,
-                #   title = "Explore data", 
-                #   DT::dataTableOutput("dataTable")
-                # )
                 box(
                   width = 12,
                   #title = "Sparklines",
@@ -108,13 +99,13 @@ body <- dashboardBody(
                        selected = "tabChart",
                        tabPanel(title = "Compare", value = "tabChart", highchartOutput("yearHighChart", width="100%", height = "500px")),
                        tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("yearDataTable"))
-                     )#,
-                     # box(
-                     #   width = 12,
-                     #   #title = "Sparklines",
-                     #   htmlwidgets::getDependency('sparkline'),  
-                     #   DT::dataTableOutput("sparklineTable")
-                     # )
+                     ),
+                    box(
+                      width = 12,
+                      #title = "Sparklines",
+                      htmlwidgets::getDependency('sparkline'),  
+                      DT::dataTableOutput("yearSparklineTable")
+                    )
                      
               ),
               column(width = 3,
@@ -650,6 +641,15 @@ server <- function(input, output, session) {
     
     DT::datatable(tb_year_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
   })
+  
+  output$yearSparklineTable <- DT::renderDataTable(
+    DT::datatable(tb_spark_year, 
+                  escape= FALSE, 
+                  options = list(drawCallback =  cb, 
+                                 lengthMenu = c(5, 10), 
+                                 pageLength = 5, 
+                                 language = list(search = 'Filter:')))
+  )
   
 
   

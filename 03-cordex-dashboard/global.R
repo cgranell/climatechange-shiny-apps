@@ -20,7 +20,7 @@ tb_year <- read_csv(url_year)
 years_list <- unique(tb_year$year)
 cities_list <- unique(tb_year$city)
 
-# prepare data for sparklines
+# prepare (decadal) data for sparklines
 tb_spark_decade <- tb_decade %>%
   spread(key = "index", value = "value") %>%
   select(-tmstmp, -date, -year) %>%
@@ -55,6 +55,40 @@ tb_spark_decade <- tb_decade %>%
     
   ) 
 
+# prepare (yearly) data for sparklines
+tb_spark_year <- tb_year %>%
+  spread(key = "index", value = "value") %>%
+  select(-tmstmp, -date) %>%
+  group_by(city) %>%
+  summarise(
+    hwmid = spk_chr(
+      hwmid, 
+      type="bar"
+      #chartRangeMin=0, 
+      #chartRangeMax=max(tb_decade$hwmid)
+    ),
+    tn10p = spk_chr(
+      tn10p, 
+      type="line"
+    ),
+    tn90p = spk_chr(
+      tn90p, 
+      type="line"
+    ),
+    tx10p = spk_chr(
+      tx10p, 
+      type="line",
+      lineColor = 'black', 
+      fillColor = '#ccc'
+    ),
+    tx90p = spk_chr(
+      tx90p, 
+      type="line",
+      lineColor = 'black', 
+      fillColor = '#ccc'
+    )
+    
+  ) 
 # Required Call back function to put sparklines into DT tables 
 cb <- htmlwidgets::JS('function(){debugger;HTMLWidgets.staticRender();}')
 
