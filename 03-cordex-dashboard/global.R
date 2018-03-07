@@ -21,7 +21,7 @@ years_list <- unique(tb_year$year)
 cities_list <- unique(tb_year$city)
 
 # prepare data for sparklines
-tb_spark <- tb_decade %>%
+tb_spark_decade <- tb_decade %>%
   spread(key = "index", value = "value") %>%
   select(-tmstmp, -date, -year) %>%
   group_by(city) %>%

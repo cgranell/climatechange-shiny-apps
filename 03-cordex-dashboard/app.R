@@ -172,7 +172,9 @@ body <- dashboardBody(
             
           ),
     
-    
+    ##########
+    ## ABOUT MENU ITEM
+    ##########
     tabItem("about", 
             fluidRow(
               box(title = "Help", status = "warning", width = 12,
@@ -418,7 +420,7 @@ server <- function(input, output, session) {
   
   
   output$sparklineTable <- DT::renderDataTable(
-    DT::datatable(tb_spark, 
+    DT::datatable(tb_spark_decade, 
                   escape= FALSE, 
                   options = list(drawCallback =  cb, 
                                  lengthMenu = c(5, 10), 
@@ -638,7 +640,18 @@ server <- function(input, output, session) {
   })
   
   
+  output$yearDataTable <- DT::renderDataTable({
+    tb_year_table <- tb_year %>%
+      filter(index %in% input$yearIndexSelected) %>%
+      filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
+      filter(city %in% names(selected_cities())) %>%
+      select(-tmstmp, -date) %>%
+      arrange(city, year)       
+    
+    DT::datatable(tb_year_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
+  })
   
+
   
 }
 
