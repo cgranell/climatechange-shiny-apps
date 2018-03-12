@@ -52,7 +52,7 @@ body <- dashboardBody(
                 box(width = NULL, status = "danger",
                    selectInput("modelSelected", 
                                label = "Model:",
-                               choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC-EC-EARTH"))),
+                               choices = c("ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E" = "ICHEC-EC-EARTH"))),
                      
                 box(width = NULL, status = "danger",
                    selectInput("indexSelected", 
