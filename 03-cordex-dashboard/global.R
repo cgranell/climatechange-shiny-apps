@@ -8,7 +8,8 @@ library(sparkline)
 # indices <- structure(c("hwmid", "tn10p"), 
 #                      .Names = c("Heat Wave Magnitude Index-daily (HWMId)", "Cold nights (TN10P)"))
 
-url_decade <- "https://raw.githubusercontent.com/cgranell/climatechange-viz/master/output/dec_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv?token=AFqiAI6NIvTh0gVu35ljuKgABpGQ3OFpks5ap59fwA%3D%3D"
+#url_decade <- "https://raw.githubusercontent.com/cgranell/climatechange-viz/master/output/dec_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv?token=AFqiAI6NIvTh0gVu35ljuKgABpGQ3OFpks5ap59fwA%3D%3D"
+url_decade <- "http://giv-oct2.uni-muenster.de:5000/dataset/4f4766b5-4f62-4f30-b72f-81e15c2976ce/resource/82ba7bbc-31d2-428a-80db-73ae759d6ac4/download/dec_mean_allindices_allcities_ichec_ec_earth_rcp85_r1i1p1_knmi_racmo22e.csv"
 tb_decade <- read_csv(url_decade)
 
 
