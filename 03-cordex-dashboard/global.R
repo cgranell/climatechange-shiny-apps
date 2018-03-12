@@ -11,6 +11,8 @@ library(sparkline)
 url_decade <- "https://raw.githubusercontent.com/cgranell/climatechange-viz/master/output/dec_mean_allindices_allcities_ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E.csv?token=AFqiAI6NIvTh0gVu35ljuKgABpGQ3OFpks5ap59fwA%3D%3D"
 tb_decade <- read_csv(url_decade)
 
+
+
 years <- unique(tb_decade$year)
 decades <- unique(tb_decade$decade)
 
