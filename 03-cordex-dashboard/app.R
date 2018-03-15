@@ -118,7 +118,8 @@ body <- dashboardBody(
                      box(width = NULL, status = "danger",
                          selectInput("yearModelSelected", 
                                      label = "Model:",
-                                     choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC-EC-EARTH"))),
+                                     choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC_SMHI",
+                                                 "ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E" = "ICHEC_KNMI"))),
                      
                      box(width = NULL, status = "danger",
                          selectInput("yearIndexSelected", 
@@ -237,9 +238,6 @@ server <- function(input, output, session) {
   ########################
   
   output$modelInfo <- renderInfoBox({
-    
-    # current_model <- "EUR-11_ICHEC-EC-EARTH_rcp85_r1i1p1_KNMI-RACMO22E"
-    #current_model <- "CORDEX Model"
     current_model <- input$modelSelected
     valueBox(
       value = current_model,
@@ -460,7 +458,7 @@ server <- function(input, output, session) {
     
     # current_model <- "ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4"
     # current_model <- "CORDEX Model"
-    current_model <- input$modelSelected
+    current_model <- input$yearModelSelected
     valueBox(
       value = current_model,
       subtitle = "Selected ensemble",
@@ -559,12 +557,24 @@ server <- function(input, output, session) {
   # })
 
   
+  # Reload simulated data for the selected model, which meand to read a separate data file per model 
+  tb_year <- reactive({
+    if (input$yearModelSelected=="ICHEC_SMHI") {
+      tb_year1
+    } else if (input$yearModelSelected=="ICHEC_KNMI") {
+      tb_year2
+    }
+  })
+  
+  
+  
+  
   # Recalculate data series for current selection of cities
   selected_cities <- reactive({
     list_cities <- list()
     if (length(input$yearCitiesSelected)>0) {
       for (c in input$yearCitiesSelected) {
-        list_cities[[c]] <- tb_year %>%
+        list_cities[[c]] <- tb_year() %>%
           filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
           filter(city %in% c) %>%
           filter(index %in% input$yearIndexSelected)
@@ -572,30 +582,6 @@ server <- function(input, output, session) {
     }
     list_cities
   })
-  
-  
-  # Recalculate data series for current selection ()
-  # tb_year_athens <- reactive({
-  #   tb_year %>%
-  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-  #     filter(city %in% c('Athens')) %>%
-  #     filter(index %in% input$yearIndexSelected)
-  # })
-  # 
-  # tb_year_berlin <- reactive({
-  #   tb_year %>%
-  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-  #     filter(city %in% c('Berlin')) %>%
-  #     filter(index %in% input$yearIndexSelected)
-  # })
-  # 
-  # tb_year_brussels <- reactive({
-  #   tb_year %>%
-  #     filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
-  #     filter(city %in% c('Brussels')) %>%
-  #     filter(index %in% input$yearIndexSelected)
-  # })
-  # 
   
   
   # Range of selected years for updating plot's xAxis categories  
@@ -611,13 +597,7 @@ server <- function(input, output, session) {
     
     hc <- highchart() %>% 
       hc_chart(type = input$yearPlotTypeSelected) 
-      # hc_add_series(name = "Athens",
-      #               data = tb_year_athens()$value) %>%
-      # hc_add_series(name = "Berlin",
-      #               data = tb_year_berlin()$value) %>%
-      # hc_add_series(name = "Brussels",
-      #               data = tb_year_brussels()$value)
-    
+
     if (!is.null(names(selected_cities()))) {
         for (cityname in names(selected_cities())) {
           hc <- hc %>%
@@ -664,7 +644,7 @@ server <- function(input, output, session) {
   
   
   output$yearDataTable <- DT::renderDataTable({
-    tb_year_table <- tb_year %>%
+    tb_year_table <- tb_year() %>%
       filter(index %in% input$yearIndexSelected) %>%
       filter(between(year(date),input$yearSelected[1], input$yearSelected[2])) %>%
       filter(city %in% names(selected_cities())) %>%
@@ -673,6 +653,9 @@ server <- function(input, output, session) {
     
     DT::datatable(tb_year_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
   })
+  
+  
+  # Reload sparkline data for the selected model, which depends on the current data in tb_year
   
   output$yearSparklineTable <- DT::renderDataTable(
     DT::datatable(tb_spark_year, 
