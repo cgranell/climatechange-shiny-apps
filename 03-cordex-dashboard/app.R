@@ -121,7 +121,11 @@ body <- dashboardBody(
                                      choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC_SMHI",
                                                  "ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E" = "ICHEC_KNMI",
                                                  "ICHEC-EC-EARTH_rcp85_r3i1p1_DMI-HIRHAM5" = "ICHEC_DMI",
-                                                 "IPSL-IPSL-CM5A-MR_rcp85_r1i1p1_IPSL-INERIS-WRF331F" = "IPSL_INERIS"))),
+                                                 "IPSL-IPSL-CM5A-MR_rcp85_r1i1p1_IPSL-INERIS-WRF331F" = "IPSL_INERIS",
+                                                 "IPSL-IPSL-CM5A-MR_rcp85_r1i1p1_SMHI-RCA4" = "IPSL_SMHI",
+                                                 "MOHC-HadGEM2-ES_rcp85_r1i1p1_KNMI-RACMO22E" = "MOHC_KNMI",
+                                                 "MOHC-HadGEM2-ES_rcp85_r1i1p1_SMHI-RCA4" = "MOHC_SMHI",
+                                                 "MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4" = "MPI_SMHI"))),
                      
                      box(width = NULL, status = "danger",
                          selectInput("yearIndexSelected", 
@@ -568,11 +572,18 @@ server <- function(input, output, session) {
       tb_year3
     } else if (input$yearModelSelected=="IPSL_INERIS") {
       tb_year4
+    } else if (input$yearModelSelected=="IPSL_SMHI") {
+      tb_year5
+    } else if (input$yearModelSelected=="MOHC_KNMI") {
+      tb_year6
+    } else if (input$yearModelSelected=="MOHC_KNMI") {
+      tb_year7
+    } else if (input$yearModelSelected=="MPI_SMHI") {
+      tb_year8
     }
   })
   
-  
-  
+
   
   # Recalculate data series for current selection of cities
   selected_cities <- reactive({
