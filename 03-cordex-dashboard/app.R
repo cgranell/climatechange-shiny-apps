@@ -119,7 +119,9 @@ body <- dashboardBody(
                          selectInput("yearModelSelected", 
                                      label = "Model:",
                                      choices = c("ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4" = "ICHEC_SMHI",
-                                                 "ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E" = "ICHEC_KNMI"))),
+                                                 "ICHEC_EC_EARTH_rcp85_r1i1p1_KNMI_RACMO22E" = "ICHEC_KNMI",
+                                                 "ICHEC-EC-EARTH_rcp85_r3i1p1_DMI-HIRHAM5" = "ICHEC_DMI",
+                                                 "IPSL-IPSL-CM5A-MR_rcp85_r1i1p1_IPSL-INERIS-WRF331F" = "IPSL_INERIS"))),
                      
                      box(width = NULL, status = "danger",
                          selectInput("yearIndexSelected", 
@@ -146,10 +148,9 @@ body <- dashboardBody(
                      box(width = NULL, status = "warning",
                          #uiOutput("yearCityBox")
                          selectizeInput("yearCitiesSelected", label = "City:", choices = list(
-                                          Southern = c(`Lisbon` = "Lisbon", `Madrid` = "Madrid"),
-                                          Central = c(`Amsterdam` = 'Amsterdam', `Berlin` = "Berlin"),
-                                          Western = c(`Bratislava` = "Bratislava", `Moscow` = "Moscow"),
-                                          Northern = c(`Stockholm` = "Stockholm", `Helsinki` = "Helsinki")),
+                                          Northern = c(`Stockholm` = "Stockholm", `Helsinki` = "Helsinki", `Moscow` = "Moscow"),
+                                          Southern = c(`Lisbon` = "Lisbon", `Madrid` = "Madrid", `Amsterdam` = 'Amsterdam', `Berlin` = "Berlin")
+                                          ),
                                         multiple = TRUE,
                                         options = list(placeholder = "Type a city name, e.g. Athens"))
                      ),
@@ -180,13 +181,13 @@ body <- dashboardBody(
               column(width = 12,
                      box(
                        width = 12,
-                       title = "Sparklines",
+                       title = "Sparklines - Decadal simualtion",
                        htmlwidgets::getDependency('sparkline'),  
                        DT::dataTableOutput("sparklineTable")
                      ),
                      box(
                        width = 12,
-                       #title = "Sparklines",
+                       title = "Sparklines - Yearly simualtion",
                        htmlwidgets::getDependency('sparkline'),  
                        DT::dataTableOutput("yearSparklineTable")
                      )))
@@ -563,6 +564,10 @@ server <- function(input, output, session) {
       tb_year1
     } else if (input$yearModelSelected=="ICHEC_KNMI") {
       tb_year2
+    } else if (input$yearModelSelected=="ICHEC_DMI") {
+      tb_year3
+    } else if (input$yearModelSelected=="IPSL_INERIS") {
+      tb_year4
     }
   })
   
@@ -656,13 +661,51 @@ server <- function(input, output, session) {
   
   
   # Reload sparkline data for the selected model, which depends on the current data in tb_year
+  tb_spark_year <- reactive({
+    
+    # prepare (yearly) data for sparklines
+    tb_year() %>%
+      spread(key = "index", value = "value") %>%
+      select(-tmstmp, -date) %>%
+      group_by(city) %>%
+      summarise(
+        hwmid = spk_chr(
+          hwmid, 
+          type="bar"
+          #chartRangeMin=0, 
+          #chartRangeMax=max(tb_decade$hwmid)
+        ),
+        tn10p = spk_chr(
+          tn10p, 
+          type="line"
+        ),
+        tn90p = spk_chr(
+          tn90p, 
+          type="line"
+        ),
+        tx10p = spk_chr(
+          tx10p, 
+          type="line",
+          lineColor = 'black', 
+          fillColor = '#ccc'
+        ),
+        tx90p = spk_chr(
+          tx90p, 
+          type="line",
+          lineColor = 'black', 
+          fillColor = '#ccc'
+        )
+        
+      ) 
+  })
+  
   
   output$yearSparklineTable <- DT::renderDataTable(
-    DT::datatable(tb_spark_year, 
+    DT::datatable(tb_spark_year(), 
                   escape= FALSE, 
                   options = list(drawCallback =  cb, 
-                                 lengthMenu = c(5, 10), 
-                                 pageLength = 5, 
+                                 lengthMenu = c(10, 15), 
+                                 pageLength = 10, 
                                  language = list(search = 'Filter:')))
   )
   
