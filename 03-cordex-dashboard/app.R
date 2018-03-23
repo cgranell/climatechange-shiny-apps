@@ -152,38 +152,20 @@ body <- dashboardBody(
                      box(width = NULL, status = "warning",
                          #uiOutput("yearCityBox")
                          selectizeInput("yearCitiesSelected", label = "City:", choices = list(
-                            `Mediterranean and Southern Europe` = c(`Athens` = "Athens", `Bucharest` = "Bucharest", `Lefkosia` = "Lefkosia", 
-                                                                    `Lisbon` = "Lisbon", `Ljubjana` = "Ljubjana", `Madrid` = "Madrid",
-                                                                    `Rome` = "Rome", `Sofia` = "Sofia", `Valleta` = "Valleta", `Zagreb` = "Zagreb"),
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          Southern = c(`Lisbon` = "Lisbon", `Madrid` = "Madrid", `Amsterdam` = 'Amsterdam', `Berlin` = "Berlin")
+                                        `Mediterranean and Southern Europe` = c(`Athens` = "Athens", `Bucharest` = "Bucharest", `Lefkosia` = "Lefkosia", 
+                                                                                `Lisbon` = "Lisbon", `Ljubjana` = "Ljubjana", `Madrid` = "Madrid",
+                                                                                `Rome` = "Rome", `Sofia` = "Sofia", `Valleta` = "Valleta", `Zagreb` = "Zagreb"),
+                                        `North and ContinentalEurope` = c(`Amsterdam` = "Amsterdam", `Berlin` = "Berlin", `Bratislava` = 'Bratislava', `Brussels` = "Brussels",
+                                                                          `Budapest` = "Budapest", `Copenhagen` = "Copenhagen", `Dublin` = 'Dublin', `Helsinki` = "Helsinki",
+                                                                          `London` = "London", `Luxembourg` = "Luxembourg", `Moscow` = 'Moscow', `Paris` = "Paris",
+                                                                          `Prague` = "Prague", `Riga` = "Riga", `Stockholm` = 'Stockholm', `Tallin` = "Tallin",
+                                                                          `Vilnius` = "Vilnius", `Warsaw` = "Warsaw", `Wien` = 'Wien', `Zurich` = "Zurich", `Oslo` = "Oslo")
                                           ),
                                         multiple = TRUE,
                                         options = list(placeholder = "Type a city name, e.g. Athens"))
                      ),
  
                      
-     
-                     
-            
-                     
-                     
-                     
-                     # North and Continental  Europe:
-                     #   
-                     #   
-                     #   
-                     #   
-                     #   "Amsterdam"  "Berlin"  "Bratislava" "Brussels"  "Budapest"   "Copenhagen" "Dublin" "Helsinki" "London"    
-                     # "Luxembourg"  "Moscow"     "Paris"      "Prague"     "Riga"   "Stockholm"  "Tallin"  "Vilnius"    "Warsaw"     "Wien"      
-                     # "Zurich" "Oslo"
-                     # 
-                                         
                      # helpText("Click the column header to sort a column."),
                      
                      box(width = NULL,
