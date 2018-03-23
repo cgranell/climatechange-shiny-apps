@@ -152,13 +152,38 @@ body <- dashboardBody(
                      box(width = NULL, status = "warning",
                          #uiOutput("yearCityBox")
                          selectizeInput("yearCitiesSelected", label = "City:", choices = list(
-                                          Northern = c(`Stockholm` = "Stockholm", `Helsinki` = "Helsinki", `Moscow` = "Moscow"),
+                            `Mediterranean and Southern Europe` = c(`Athens` = "Athens", `Bucharest` = "Bucharest", `Lefkosia` = "Lefkosia", 
+                                                                    `Lisbon` = "Lisbon", `Ljubjana` = "Ljubjana", `Madrid` = "Madrid",
+                                                                    `Rome` = "Rome", `Sofia` = "Sofia", `Valleta` = "Valleta", `Zagreb` = "Zagreb"),
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
                                           Southern = c(`Lisbon` = "Lisbon", `Madrid` = "Madrid", `Amsterdam` = 'Amsterdam', `Berlin` = "Berlin")
                                           ),
                                         multiple = TRUE,
                                         options = list(placeholder = "Type a city name, e.g. Athens"))
                      ),
+ 
                      
+     
+                     
+            
+                     
+                     
+                     
+                     # North and Continental  Europe:
+                     #   
+                     #   
+                     #   
+                     #   
+                     #   "Amsterdam"  "Berlin"  "Bratislava" "Brussels"  "Budapest"   "Copenhagen" "Dublin" "Helsinki" "London"    
+                     # "Luxembourg"  "Moscow"     "Paris"      "Prague"     "Riga"   "Stockholm"  "Tallin"  "Vilnius"    "Warsaw"     "Wien"      
+                     # "Zurich" "Oslo"
+                     # 
+                                         
                      # helpText("Click the column header to sort a column."),
                      
                      box(width = NULL,
