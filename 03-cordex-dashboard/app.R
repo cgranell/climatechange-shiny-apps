@@ -155,7 +155,7 @@ body <- dashboardBody(
                                         `Mediterranean and Southern Europe` = c(`Athens` = "Athens", `Bucharest` = "Bucharest", `Lefkosia` = "Lefkosia", 
                                                                                 `Lisbon` = "Lisbon", `Ljubjana` = "Ljubjana", `Madrid` = "Madrid",
                                                                                 `Rome` = "Rome", `Sofia` = "Sofia", `Valleta` = "Valleta", `Zagreb` = "Zagreb"),
-                                        `North and ContinentalEurope` = c(`Amsterdam` = "Amsterdam", `Berlin` = "Berlin", `Bratislava` = 'Bratislava', `Brussels` = "Brussels",
+                                        `North and Continental Europe` = c(`Amsterdam` = "Amsterdam", `Berlin` = "Berlin", `Bratislava` = 'Bratislava', `Brussels` = "Brussels",
                                                                           `Budapest` = "Budapest", `Copenhagen` = "Copenhagen", `Dublin` = 'Dublin', `Helsinki` = "Helsinki",
                                                                           `London` = "London", `Luxembourg` = "Luxembourg", `Moscow` = 'Moscow', `Paris` = "Paris",
                                                                           `Prague` = "Prague", `Riga` = "Riga", `Stockholm` = 'Stockholm', `Tallin` = "Tallin",
