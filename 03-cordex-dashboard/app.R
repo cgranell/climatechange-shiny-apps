@@ -130,14 +130,14 @@ body <- dashboardBody(
                      box(width = NULL, status = "danger",
                          selectInput("yearIndexSelected", 
                                      label = "Index:",
-                                     choices = c("Heat Wave Magnitude Index-daily (HWMId)" = "hwmid", 
+                                     choices = c("Heat Wave Magnitude Index-daily (HWMId)" = "HWMId", 
                                                  "Cold nights (TN10P)" = "tn10p",
                                                  "Warm nights (TN90P)" = "tn90p",
                                                  "Cold days (TX10P)" = "tx10p",
                                                  "Warm days (TX90P)" = "tx90p",
-                                                 "Description (TNN)" = "tnn",
-                                                 "Description (TNX)" = "tnx",
-                                                 "Description (TXX)" = "txx"))),
+                                                 "Description (TNN)" = "TNn",
+                                                 "Description (TNX)" = "TNx",
+                                                 "Description (TXX)" = "TXx"))),
                      box(width = NULL, status = "warning",
                          sliderInput("yearSelected",
                                      "Years:",
@@ -192,13 +192,13 @@ body <- dashboardBody(
               column(width = 12,
                      box(
                        width = 12,
-                       title = "Sparklines - Decadal simualtion",
+                       title = "Sparklines - Decadal simulation",
                        htmlwidgets::getDependency('sparkline'),  
                        DT::dataTableOutput("sparklineTable")
                      ),
                      box(
                        width = 12,
-                       title = "Sparklines - Yearly simualtion",
+                       title = "Sparklines - Yearly simulation",
                        htmlwidgets::getDependency('sparkline'),  
                        DT::dataTableOutput("yearSparklineTable")
                      )))
@@ -687,8 +687,8 @@ server <- function(input, output, session) {
       select(-tmstmp, -date) %>%
       group_by(city) %>%
       summarise(
-        hwmid = spk_chr(
-          hwmid, 
+        hwmid= spk_chr(
+          HWMId, 
           type="bar"
           #chartRangeMin=0, 
           #chartRangeMax=max(tb_decade$hwmid)

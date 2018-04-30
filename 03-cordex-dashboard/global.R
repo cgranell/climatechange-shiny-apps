@@ -80,7 +80,7 @@ tb_spark_year <- tb_year1 %>%
   group_by(city) %>%
   summarise(
     hwmid = spk_chr(
-      hwmid, 
+      HWMId, 
       type="bar"
       #chartRangeMin=0, 
       #chartRangeMax=max(tb_decade$hwmid)
