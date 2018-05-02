@@ -135,7 +135,7 @@ body <- dashboardBody(
                                                  "Warm nights (TN90p)" = "tn90p",
                                                  "Cold days (TX10p)" = "tx10p",
                                                  "Warm days (TX90p)" = "tx90p",
-                                                 "Comptued minimum of daily max temp. (TNn)" = "TNn",
+                                                 "Computed minimum of daily max temp. (TNn)" = "TNn",
                                                  "Computed maximum of daily max temp. (TNx)" = "TNx",
                                                  "Annual maximum of daily max temp. (TXx)" = "TXx"))),
             
