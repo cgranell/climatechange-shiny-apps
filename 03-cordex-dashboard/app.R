@@ -135,9 +135,10 @@ body <- dashboardBody(
                                                  "Warm nights (TN90p)" = "tn90p",
                                                  "Cold days (TX10p)" = "tx10p",
                                                  "Warm days (TX90p)" = "tx90p",
-                                                 "Description (TNn)" = "TNn",
-                                                 "Description (TNx)" = "TNx",
-                                                 "Description (TXx)" = "TXx"))),
+                                                 "Comptued minimum of daily max temp. (TNn)" = "TNn",
+                                                 "Computed maximum of daily max temp. (TNx)" = "TNx",
+                                                 "Annual maximum of daily max temp. (TXx)" = "TXx"))),
+            
                      box(width = NULL, status = "warning",
                          sliderInput("yearSelected",
                                      "Years:",
@@ -214,13 +215,10 @@ body <- dashboardBody(
               box(title = "Contact", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
-                        p(
-                          class = "text-muted",
-                          paste("Contact author: Marek Smid.",
-                                "To learn more about the project, please visit ")
-                          ),
+                        h4("Application author"),
+                        b("Marek Smid"),
+                        h4("Project web site"),
                         a(href="http://www.geo-c.eu", "GEO-C project")
-                        
                     )
                   })
               
@@ -229,39 +227,40 @@ body <- dashboardBody(
               box(title = "Usage", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
-                        p(
-                            class = "text-muted",
-                            paste("Use the Decadal forecast tab to examine and compare plots for decadal simulated data. ",
-                                  "Use the Yearly forecast  tab to examine and compare plots for yearly simulated  ",
-                                  "To learn more about the project, visit "
-                            ))
+                        p(class = "text-muted", "Use the Decadal forecast tab to examine and compare plots for decadal simulated data."),
+                        p(class = "text-muted", "Use the Yearly forecast tab to examine and compare plots for yearly simulated.")
                     )
                   })
-                  
-                  
-                  
-                  # p(
-                  #   class = "text-muted",
-                  #   paste("Use the Decadal chart tab to compare diffent simulation plots. ", 
-                  #         "Use the Yearly Explorer tab to examine the raw data in tabular form. ",
-                  #         "To learn more about the project, visit <a href='http://www.geo-c.eu'>GEO-C project</a>. ",
-                  #         "Application author: Marek Smid.")
-                  #   )
                 ),
               
               box(title = "Information", status = "warning", width = 12,
-                  p(
-                    class = "text-muted",
-                    paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013b),  ",
-                          "https://doi.org/10.1002/jgrd.50203",
-                          "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
-                          "Here, we computed the maximum and minimum of daily maximum temperatures for each year (<b>TNx</b> and </b>TNn respectively) (Alexander et al., 2006), ",
-                          "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
-                          "to capture the evolution of extreme heat peaks.",
-                          " "
-
-                          )
-                  )
+                  withTags({
+                    div(class="header", checked=NA,
+                        p(
+                          class = "text-muted",
+                          paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013),  ",
+                                "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
+                                "Here, we computed the maximum and minimum of daily maximum temperatures for each year (TNx and TNn respectively) (Alexander et al., 2006), ",
+                                "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
+                                "to capture the evolution of extreme heat peaks."
+                          )),
+                        a(href="https://doi.org/10.1002/jgrd.50203", "(Sillmann, Kharin, Zwiers, et al., 2013)"),
+                        a(href="https://doi.org/10.1029/2005JD006290", "(Alexander et al., 2006)")
+                    )
+                  })
+                  
+                  # p(
+                  #   class = "text-muted",
+                  #   paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013b),  ",
+                  #         "https://doi.org/10.1002/jgrd.50203",
+                  #         "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
+                  #         "Here, we computed the maximum and minimum of daily maximum temperatures for each year (<b>TNx</b> and </b>TNn respectively) (Alexander et al., 2006), ",
+                  #         "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
+                  #         "to capture the evolution of extreme heat peaks.",
+                  #         " "
+                  # 
+                  #         )
+                  # )
               )
             
             ))
