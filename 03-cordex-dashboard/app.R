@@ -135,9 +135,9 @@ body <- dashboardBody(
                                                  "Warm nights (TN90p)" = "tn90p",
                                                  "Cold days (TX10p)" = "tx10p",
                                                  "Warm days (TX90p)" = "tx90p",
-                                                 "Computed minimum of daily max temp. (TNn)" = "TNn",
-                                                 "Computed maximum of daily max temp. (TNx)" = "TNx",
-                                                 "Annual maximum of daily max temp. (TXx)" = "TXx"))),
+                                                 "Minimum of daily min temp. (TNn)" = "TNn",
+                                                 "Maximum of daily min temp. (TNx)" = "TNx",
+                                                 "Maximum of daily max temp. (TXx)" = "TXx"))),
             
                      box(width = NULL, status = "warning",
                          sliderInput("yearSelected",
@@ -240,7 +240,7 @@ body <- dashboardBody(
                           class = "text-muted",
                           paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013),  ",
                                 "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
-                                "Here, we computed the maximum and minimum of daily maximum temperatures for each year (TNx and TNn respectively) (Alexander et al., 2006), ",
+                                "Here, we computed the maximum and minimum of daily minimum temperatures for each year (TNx and TNn respectively) (Alexander et al., 2006), ",
                                 "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
                                 "to capture the evolution of extreme heat peaks."
                           )),
