@@ -210,27 +210,56 @@ body <- dashboardBody(
     ##########
     tabItem("about", 
             fluidRow(
-              box(title = "Help", status = "warning", width = 12,
-                  p(
-                    class = "text-muted",
-                    paste("Use the Decadal chart tab to compare diffent simulation plots. ", 
-                          "Use the Yearly Explorer tab to examine the raw data in tabular form. ",
-                          "To learn more about the project, visit <a href='http://www.geo-c.eu'>GEO-C project</a>. ",
-                          "Application author: Marek Smid.")
+              
+              box(title = "Contact", status = "warning", width = 12,
+                  withTags({
+                    div(class="header", checked=NA,
+                        p(
+                          class = "text-muted",
+                          paste("Contact author: Marek Smid.",
+                                "To learn more about the project, please visit ")
+                          ),
+                        a(href="http://www.geo-c.eu", "GEO-C project")
+                        
                     )
+                  })
+              
+              ),
+              
+              box(title = "Usage", status = "warning", width = 12,
+                  withTags({
+                    div(class="header", checked=NA,
+                        p(
+                            class = "text-muted",
+                            paste("Use the Decadal forecast tab to examine and compare plots for decadal simulated data. ",
+                                  "Use the Yearly forecast  tab to examine and compare plots for yearly simulated  ",
+                                  "To learn more about the project, visit "
+                            ))
+                    )
+                  })
+                  
+                  
+                  
+                  # p(
+                  #   class = "text-muted",
+                  #   paste("Use the Decadal chart tab to compare diffent simulation plots. ", 
+                  #         "Use the Yearly Explorer tab to examine the raw data in tabular form. ",
+                  #         "To learn more about the project, visit <a href='http://www.geo-c.eu'>GEO-C project</a>. ",
+                  #         "Application author: Marek Smid.")
+                  #   )
                 ),
               
               box(title = "Information", status = "warning", width = 12,
                   p(
                     class = "text-muted",
-                    paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013b),  ", 
+                    paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013b),  ",
                           "https://doi.org/10.1002/jgrd.50203",
                           "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
                           "Here, we computed the maximum and minimum of daily maximum temperatures for each year (<b>TNx</b> and </b>TNn respectively) (Alexander et al., 2006), ",
                           "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
                           "to capture the evolution of extreme heat peaks.",
-                          " ",
-                          
+                          " "
+
                           )
                   )
               )
