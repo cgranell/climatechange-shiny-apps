@@ -15,7 +15,7 @@ library(DT)
 source("global.R")
 
 header <- dashboardHeader(
-  title = "Climate simulation in major European cities (Marek)",
+  title = "MetroHeat web tool: a communication service of climate change impacts on temperature over European capitals",
   titleWidth = 450)
 
 body <- dashboardBody(
