@@ -15,7 +15,7 @@ library(DT)
 source("global.R")
 
 header <- dashboardHeader(
-  title = "MetroHeat web tool: a communication service of climate change impacts on temperature over European capitals",
+  title = "MetroHeat web tool",
   titleWidth = 450)
 
 body <- dashboardBody(
@@ -212,7 +212,7 @@ body <- dashboardBody(
     tabItem("about", 
             fluidRow(
               
-              box(title = "Information", status = "warning", width = 12,
+              box(title = "MetroHeat web tool: a communication service of climate change impacts on temperature over European capitals", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
                         p(
