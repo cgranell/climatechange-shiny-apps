@@ -255,8 +255,8 @@ body <- dashboardBody(
               box(title = "Related publications and resources", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
-                        p(class = "text-muted", "Use the Decadal forecast tab to examine and compare plots for decadal simulated data."),
-                        p(class = "text-muted", "Use the Yearly forecast tab to examine and compare plots for yearly simulated.")
+                        p(class = "text-muted", "Smid, M., Granell, C., & Costa, A. C. (2018). MetroHeat web tool: a communication service of climate change impacts on temperature over European capitals. Submitted to Information."),
+                        p(class = "text-muted", "Smid, M., Russo, S., Costa, A. C., Granell, C., & Pebesma, E. (2018). Ranking European capitals by exposure to heat waves and cold waves. Submitted to Urban Climate.")
                     )
                   })
                 ),
