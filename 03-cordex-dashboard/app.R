@@ -256,7 +256,17 @@ body <- dashboardBody(
                   withTags({
                     div(class="header", checked=NA,
                         p(class = "text-muted", "Smid, M., Granell, C., & Costa, A. C. (2018). MetroHeat web tool: a communication service of climate change impacts on temperature over European capitals. Submitted to Information."),
-                        p(class = "text-muted", "Smid, M., Russo, S., Costa, A. C., Granell, C., & Pebesma, E. (2018). Ranking European capitals by exposure to heat waves and cold waves. Submitted to Urban Climate.")
+                        p(class = "text-muted", "Smid, M., Russo, S., Costa, A. C., Granell, C., & Pebesma, E. (2018). Ranking European capitals by exposure to heat waves and cold waves. Submitted to Urban Climate."),
+                        
+                        p(class = "text-muted", 
+                          paste("Adition inforamti about the Heat Wave Magnitude Index daily (HWMId) can be found in: ",
+                                "Russo, S., Sillmann, J., & Fischer, E. M. (2015). Top ten European heatwaves since 1950 and their occurrence in the coming decades. Environmental Research Letters, 10(12), 124003. ",
+                                "The HWMId was computed using the extRemes R package."
+                          )),
+                        
+                        a(href="https://doi.org/10.1088/1748-9326/10/12/124003", "(Russo et al., 2015)"),
+                        a(href="https://cran.r-project.org/package=extRemes", "extRemes R package")
+                        
                     )
                   })
                 ),
