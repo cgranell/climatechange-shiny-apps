@@ -212,40 +212,28 @@ body <- dashboardBody(
     tabItem("about", 
             fluidRow(
               
-              box(title = "Contact", status = "warning", width = 12,
-                  withTags({
-                    div(class="header", checked=NA,
-                        h4("Application author"),
-                        b("Marek Smid"),
-                        h4("Project web site"),
-                        a(href="http://www.geo-c.eu", "GEO-C project")
-                    )
-                  })
-              
-              ),
-              
-              box(title = "Usage", status = "warning", width = 12,
-                  withTags({
-                    div(class="header", checked=NA,
-                        p(class = "text-muted", "Use the Decadal forecast tab to examine and compare plots for decadal simulated data."),
-                        p(class = "text-muted", "Use the Yearly forecast tab to examine and compare plots for yearly simulated.")
-                    )
-                  })
-                ),
-              
               box(title = "Information", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
                         p(
                           class = "text-muted",
-                          paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013),  ",
-                                "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
-                                "Here, we computed the maximum and minimum of daily minimum temperatures for each year (TNx and TNn respectively) (Alexander et al., 2006), ",
-                                "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
-                                "to capture the evolution of extreme heat peaks."
+                          paste(
+                            "Most communication services of climate change impacts have a global, national, or regional focus. ",
+                            "Hence, climate services targeting metropolitan communities are still lacking, particularly in Europe. ",
+                            "MetroHeat provides an open data climate service for visualising and interacting with extreme temperature indices and ",
+                            "heat waves indicators for European capitals, derived from the multi-model climate projections of the EURO-CORDEX initiative. ",
+                            "By providing climate impacts-related data as customised products for European capitals, MetroHeat aims to foster ",
+                            "multidisciplinary research and cooperation, as well as to contribute to the effective communication of the complex issue of climate change. ", 
+                            "The target audience comprises climate impact researchers, intermediate organizations, societal-end users, and general public."
                           )),
-                        a(href="https://doi.org/10.1002/jgrd.50203", "(Sillmann, Kharin, Zwiers, et al., 2013)"),
-                        a(href="https://doi.org/10.1029/2005JD006290", "(Alexander et al., 2006)")
+                        p(class = "text-muted",
+                          paste(
+                          "MetroHeat was developed within the Open City Toolkit of the GEO-C project (http://geo-c.eu), ",
+                          "funded by the European Commission (Grant Agreement number 642332 — GEO-C — H2020-MSCA-ITN-2014)."
+                          )),
+                        a(href="http://www.geo-c.eu", "GEO-C project")
+                        #a(href="https://doi.org/10.1002/jgrd.50203", "(Sillmann, Kharin, Zwiers, et al., 2013)"),
+                        #a(href="https://doi.org/10.1029/2005JD006290", "(Alexander et al., 2006)")
                     )
                   })
                   
@@ -261,6 +249,28 @@ body <- dashboardBody(
                   # 
                   #         )
                   # )
+              ),
+              
+              
+              box(title = "Related publications and resources", status = "warning", width = 12,
+                  withTags({
+                    div(class="header", checked=NA,
+                        p(class = "text-muted", "Use the Decadal forecast tab to examine and compare plots for decadal simulated data."),
+                        p(class = "text-muted", "Use the Yearly forecast tab to examine and compare plots for yearly simulated.")
+                    )
+                  })
+                ),
+              
+              box(title = "Contact", status = "warning", width = 12,
+                  withTags({
+                    div(class="header", checked=NA,
+                        h4("Application author"),
+                        b("Marek Smid"),
+                        h4("Project web site"),
+                        a(href="http://www.geo-c.eu", "GEO-C project")
+                    )
+                  })
+                  
               )
             
             ))
