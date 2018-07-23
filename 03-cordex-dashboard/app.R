@@ -222,9 +222,9 @@ body <- dashboardBody(
                        title = "Compare & Explore",
                        # The id lets us use input$tabset1 on the server to find the current tab
                        id = "tabset1", width = 12, height = "550px",
-                       selected = "tabChart"
-                       #tabPanel(title = "Compare", value = "tabChart", highchartOutput("ensembleHighChart", width="100%", height = "500px")),
-                       #tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("ensembleDataTable"))
+                       selected = "tabChart",
+                       tabPanel(title = "Compare", value = "tabChart", highchartOutput("ensembleHighChart", width="100%", height = "500px")),
+                       tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("ensembleDataTable"))
                      )
                      
               ),
@@ -929,6 +929,92 @@ server <- function(input, output, session) {
     )
   })
   
+  
+  
+  # Recalculate data series for current selection of cities
+  ensemble_selected_cities <- reactive({
+    list_cities <- list()
+    if (length(input$ensembleCitiesSelected)>0) {
+      for (c in input$ensembleCitiesSelected) {
+        list_cities[[c]] <- tb_ensemble %>%
+          filter(between(year(date),input$ensembleYearSelected[1], input$ensembleYearSelected[2])) %>%
+          filter(city %in% c)
+      }
+    }
+    list_cities
+  })
+  
+
+  # Range of decades of selected years for updating plot's xAxis categories  
+  ensemble_selected_decades <- reactive({
+    index_year_min = which(years == input$ensembleYearSelected[1])
+    index_year_max = which(years == input$ensembleYearSelected[2])
+    decades[index_year_min:index_year_max]
+  })
+  
+  
+  # Highchart -------------------------------------------------------
+  output$ensembleHighChart <- renderHighchart({
+    
+    hc <- highchart() %>% 
+      hc_chart(type = input$ensemblePlotTypeSelected) 
+    
+    if (!is.null(names(ensemble_selected_cities()))) {
+      for (cityname in names(ensemble_selected_cities())) {
+        hc <- hc %>%
+          hc_add_series(name = cityname,
+                        data = ensemble_selected_cities()[[cityname]]$value)
+      }
+    }
+    
+    
+    
+    hc <- hc %>%
+      hc_xAxis(
+        type = "datetime",
+        title = list(text = "Decades"),
+        opposite = TRUE,
+        labels = list(format = "{value}"),
+        gridLineWidth = 0.5,
+        categories = ensemble_selected_decades()) %>%
+      
+      hc_yAxis(
+        title = list(text = input$ensembleIndexSelected),
+        min = 0,
+        tickInterval = 5,
+        minorTickInterval = 2.5) %>%
+      
+      
+      hc_tooltip(pointFormat = "<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y:,.4f}</b><br/>",
+                 shared = TRUE, crosshairs = TRUE) %>%
+      
+      hc_legend(align = "center",
+                verticalAlign = "bottom",
+                layout = "horizontal",
+                enabled = TRUE)  %>% # to enable/unable data series when clicking on a lengend item
+      
+      hc_credits(enabled = TRUE,
+                 text = "Sources: CORDEX, GEO-C",
+                 href = "http://geo-c-eu",
+                 style = list(fontSize = "10px")) %>%
+      hc_exporting(enabled = TRUE) # enable exporting option
+    
+    
+    # Print highchart 
+    hc  
+    
+  })
+  
+  
+  output$ensembleDataTable <- DT::renderDataTable({
+    tb_ensemble_table <- tb_ensemble %>%
+      filter(between(year(date),input$ensembleYearSelected[1], input$ensembleYearSelected[2])) %>%
+      filter(city %in% names(ensemble_selected_cities())) %>%
+      select(-tmstmp, -date) %>%
+      arrange(city, year)       
+    
+    DT::datatable(tb_ensemble_table, options = list(lengthMenu = c(10, 15), pageLength = 10))
+  })
   
   
 }
