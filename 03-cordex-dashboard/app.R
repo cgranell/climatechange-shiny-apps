@@ -210,7 +210,7 @@ body <- dashboardBody(
     ##########
     ## DECADAL ENSEMBLE MEANMENU ITEM
     ##########
-    tabItem("years",
+    tabItem("ensemble",
             fluidRow(
               infoBoxOutput("ensembleModelInfo"),
               infoBoxOutput("ensembleIndexInfo"),
@@ -222,16 +222,10 @@ body <- dashboardBody(
                        title = "Compare & Explore",
                        # The id lets us use input$tabset1 on the server to find the current tab
                        id = "tabset1", width = 12, height = "550px",
-                       selected = "tabChart",
-                       tabPanel(title = "Compare", value = "tabChart", highchartOutput("yearHighChart", width="100%", height = "500px")),
-                       tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("yearDataTable"))
-                     )#,
-                     # box(
-                     #   width = 12,
-                     #   #title = "Sparklines",
-                     #   htmlwidgets::getDependency('sparkline'),  
-                     #   DT::dataTableOutput("yearSparklineTable")
-                     # )
+                       selected = "tabChart"
+                       #tabPanel(title = "Compare", value = "tabChart", highchartOutput("ensembleHighChart", width="100%", height = "500px")),
+                       #tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("ensembleDataTable"))
+                     )
                      
               ),
               column(width = 3,
@@ -241,9 +235,9 @@ body <- dashboardBody(
                                      "Years:",
                                      min = min(years_list),
                                      max = max(years_list),
-                                     step = 1, # year 
+                                     step = 10, # decades, not years 
                                      sep = "",
-                                     value = range(years_list))),
+                                     value = range(years))),
                      
                      
                      # box for city
@@ -899,7 +893,6 @@ server <- function(input, output, session) {
   output$ensembleModelInfo <- renderInfoBox({
     
     current_model <- "Ensemble mean"
-    current_model <- input$yearModelSelected
     valueBox(
       value = current_model,
       subtitle = "Selected ensemble",
