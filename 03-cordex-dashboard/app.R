@@ -232,23 +232,41 @@ body <- dashboardBody(
                           "funded by the European Commission (Grant Agreement number 642332 — GEO-C — H2020-MSCA-ITN-2014)."
                           )),
                         a(href="http://www.geo-c.eu", "GEO-C project")
-                        #a(href="https://doi.org/10.1002/jgrd.50203", "(Sillmann, Kharin, Zwiers, et al., 2013)"),
-                        #a(href="https://doi.org/10.1029/2005JD006290", "(Alexander et al., 2006)")
                     )
                   })
                   
-                  # p(
-                  #   class = "text-muted",
-                  #   paste("Absolute indices represent the upper or lower extreme per chosen period of time (Sillmann, Kharin, Zwiers, et al., 2013b),  ",
-                  #         "https://doi.org/10.1002/jgrd.50203",
-                  #         "and they are often used by engineers to infer the design of the infrastructures (Zhang et al., 2011). ",
-                  #         "Here, we computed the maximum and minimum of daily maximum temperatures for each year (<b>TNx</b> and </b>TNn respectively) (Alexander et al., 2006), ",
-                  #         "and also the annual maximum of daily maximum temperature (<b>TXx</b>) (Alexander et al., 2006) ",
-                  #         "to capture the evolution of extreme heat peaks.",
-                  #         " "
-                  # 
-                  #         )
-                  # )
+              ),
+              
+              box(title = "Data", status = "warning", width = 12,
+                  withTags({
+                    div(class="header", checked=NA,
+                      
+                        p(class = "text-muted", 
+                          paste("ETCCDI (Expert Team on Climate Change Detection and Indices) indices: Tn10p, Tn90p, Tx10p, Tx90p, TNn, TNx, TXx",
+                                "The ETCCDI indices were computed by means of the Climate Data Operator (CDO 2018: Climate Data Operators)."
+                          )),
+                        
+                        a(href="http://etccdi.pacificclimate.org/", "ETCCDI website"),
+                        a(href="http://www.mpimet.mpg.de/cdo", "CDO software"),
+                        
+                        
+                        p(class = "text-muted", 
+                          paste("Raw data from eight multi-model climate simulations using the RCP8.5 scenario were collected from the EURO-CORDEX data repository. ",
+                                "The selected Regional Circulation Models / Global Circulation Models  (RCM / GCM) were: KNMI-RACMO22E / ICHEC-EC-EARTH; DMI-HIRHAM5 / ICHEC-EC-EARTH; IPSL-INERIS-WRF331F / IPSL-IPSL-CM5A-MR; SMHI-RCA4 / IPSL-IPSL-CM5A-MR; KNMI-RACMO22E / MOHC-HadGEM2-ES; SMHI-RCA4 / MOHC-HadGEM2-ES; and SMHI-RCA4 / MPI-M-MPI-ESM-LR. ",
+                                "Further details can be found in the EURO-CORDEX website (https://www.euro-cordex.net/index.php.en)."
+                          )),
+                        a(href="https://www.euro-cordex.net/index.php.en", "EURO-CORDEX website"),
+                        
+                        p(class = "text-muted", 
+                          paste("The daily maximum and minimum near-surface temperature data for the 1971–2100 period were retrieved from the ESG – Earth System Grid data repository (https://www.earthsystemgrid.org/).",
+                                "The spatial extent of European capitals was derived from the Urban Atlas of the European Environment Agency (https://www.eea.europa.eu/ds_resolveuid/DAT-190-en)."
+                          )),
+                        
+                        a(href="https://www.earthsystemgrid.org/", "ESG data repository"),
+                        a(href="https://www.eea.europa.eu/ds_resolveuid/DAT-190-en", "EAA Atlas")
+                        
+                    )
+                  })
               ),
               
               
@@ -266,6 +284,7 @@ body <- dashboardBody(
                         
                         a(href="https://doi.org/10.1088/1748-9326/10/12/124003", "(Russo et al., 2015)"),
                         a(href="https://cran.r-project.org/package=extRemes", "extRemes R package")
+
                         
                     )
                   })
@@ -274,9 +293,7 @@ body <- dashboardBody(
               box(title = "Contact", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
-                        h4("Application author"),
-                        b("Marek Smid"),
-                        h4("Project web site"),
+                        p("Main contact person is Marek Smid, as main researcher of one of the contributed Phd projects in the GEO-C project."),
                         a(href="http://www.geo-c.eu", "GEO-C project")
                     )
                   })
