@@ -206,6 +206,86 @@ body <- dashboardBody(
                     
     ),
     
+    
+    ##########
+    ## DECADAL ENSEMBLE MEANMENU ITEM
+    ##########
+    tabItem("years",
+            fluidRow(
+              infoBoxOutput("ensembleModelInfo"),
+              infoBoxOutput("ensembleIndexInfo"),
+              infoBoxOutput("ensembleYearInfo")
+            ),
+            fluidRow(
+              column(width = 9,
+                     tabBox(
+                       title = "Compare & Explore",
+                       # The id lets us use input$tabset1 on the server to find the current tab
+                       id = "tabset1", width = 12, height = "550px",
+                       selected = "tabChart",
+                       tabPanel(title = "Compare", value = "tabChart", highchartOutput("yearHighChart", width="100%", height = "500px")),
+                       tabPanel(title = "Explore", value = "tabChart", DT::dataTableOutput("yearDataTable"))
+                     )#,
+                     # box(
+                     #   width = 12,
+                     #   #title = "Sparklines",
+                     #   htmlwidgets::getDependency('sparkline'),  
+                     #   DT::dataTableOutput("yearSparklineTable")
+                     # )
+                     
+              ),
+              column(width = 3,
+                     
+                     box(width = NULL, status = "warning",
+                         sliderInput("ensembleYearSelected",
+                                     "Years:",
+                                     min = min(years_list),
+                                     max = max(years_list),
+                                     step = 1, # year 
+                                     sep = "",
+                                     value = range(years_list))),
+                     
+                     
+                     # box for city
+                     box(width = NULL, status = "warning",
+                         #uiOutput("yearCityBox")
+                         selectizeInput("ensembleCitiesSelected", label = "City:", choices = list(
+                           `Mediterranean and Southern Europe` = c(`Athens` = "Athens", `Bucharest` = "Bucharest", `Lefkosia` = "Lefkosia", 
+                                                                   `Lisbon` = "Lisbon", `Ljubjana` = "Ljubjana", `Madrid` = "Madrid",
+                                                                   `Rome` = "Rome", `Sofia` = "Sofia", `Valleta` = "Valleta", `Zagreb` = "Zagreb"),
+                           `North and Continental Europe` = c(`Amsterdam` = "Amsterdam", `Berlin` = "Berlin", `Bratislava` = 'Bratislava', `Brussels` = "Brussels",
+                                                              `Budapest` = "Budapest", `Copenhagen` = "Copenhagen", `Dublin` = 'Dublin', `Helsinki` = "Helsinki",
+                                                              `London` = "London", `Luxembourg` = "Luxembourg", `Moscow` = 'Moscow', `Paris` = "Paris",
+                                                              `Prague` = "Prague", `Riga` = "Riga", `Stockholm` = 'Stockholm', `Tallin` = "Tallin",
+                                                              `Vilnius` = "Vilnius", `Warsaw` = "Warsaw", `Wien` = 'Wien', `Zurich` = "Zurich", `Oslo` = "Oslo")
+                         ),
+                         multiple = TRUE,
+                         options = list(placeholder = "Type a city name, e.g. Athens"))
+                     ),
+                     
+                     
+                     # helpText("Click the column header to sort a column."),
+                     
+                     box(width = NULL,
+                         selectInput("ensemblePlotTypeSelected", 
+                                     label = "Plot type:",
+                                     choices = c("Line (spline)" = "spline", 
+                                                 "Line" = "line",
+                                                 "Bar" = "column",
+                                                 "Scatter" = "scatter",
+                                                 "Area" = "area",
+                                                 "Area (spline)" = "areaspline")))
+                     
+              )
+            )
+            
+            
+    ),
+    
+    
+    
+    
+    
     ##########
     ## ABOUT MENU ITEM
     ##########
@@ -310,6 +390,7 @@ sidebar <- dashboardSidebar(
     menuItem("Decadal forecast", tabName = "decades", icon = icon("bar-chart", lib="font-awesome")),
     menuItem("Yearly forecast", tabName = "years", icon = icon("bar-chart", lib="font-awesome")),
     menuItem("Sparklines", tabName = "sparklines", icon = icon("line-chart", lib="font-awesome")),
+    menuItem("Ensemble mean", tabName = "ensemble", icon = icon("bar-chart", lib="font-awesome")),
     menuItem("About", tabName = "about", icon = icon("info light", lib="font-awesome"))
   )
 )
@@ -809,6 +890,53 @@ server <- function(input, output, session) {
   )
   
 
+  
+  ########################
+  ## DECADAL ENSENBLE MEAN PAGE
+  ########################
+  
+  
+  output$ensembleModelInfo <- renderInfoBox({
+    
+    current_model <- "Ensemble mean"
+    current_model <- input$yearModelSelected
+    valueBox(
+      value = current_model,
+      subtitle = "Selected ensemble",
+      color = "light-blue",
+      icon = icon("cog", lib = "glyphicon")
+    )
+  })
+  
+  
+  output$ensembleIndexInfo <- renderInfoBox({
+    
+    current_index <- "HWMId"
+    valueBox(
+      value = current_index,
+      subtitle = "Selected index",
+      color = "red",
+      icon = icon("list")
+    )
+  })
+  
+  
+  output$ensembleYearInfo <- renderInfoBox({
+    if(input$ensembleYearSelected[1] == input$ensembleYearSelected[2]) { 
+      current_years <- as.character(input$ensembleYearSelected[1])
+    } else {
+      current_years <- paste("Between ",input$ensembleYearSelected[1], " and ", input$ensembleYearSelected[2])
+    }
+    
+    valueBox(
+      value = current_years,
+      color = "yellow",
+      subtitle = "Selected years",
+      icon = icon("calendar")
+    )
+  })
+  
+  
   
 }
 

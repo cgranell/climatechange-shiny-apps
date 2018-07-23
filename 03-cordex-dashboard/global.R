@@ -112,4 +112,8 @@ tb_spark_year <- tb_year1 %>%
 cb <- htmlwidgets::JS('function(){debugger;HTMLWidgets.staticRender();}')
 
 
+# ensemble mean
+url_ensemble <- "http://giv-oct2.uni-muenster.de:5000/dataset/d607e81c-d4f3-414e-b1a1-8b33cceda355/resource/20fa043e-a48d-4d1e-866a-770b8f126195/download/decadal_ensemble_mean_31_cities_hwmid.csv"
+tb_ensemble <- read_csv(url_ensemble)
+
 
