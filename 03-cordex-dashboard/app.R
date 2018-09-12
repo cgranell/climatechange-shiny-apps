@@ -305,7 +305,7 @@ body <- dashboardBody(
                           "MetroHeat was developed within the Open City Toolkit of the GEO-C project (http://geo-c.eu), ",
                           "funded by the European Commission (Grant Agreement number 642332 — GEO-C — H2020-MSCA-ITN-2014)."
                           )),
-                        a(href="http://www.geo-c.eu", "GEO-C project")
+                        a(href="http://geo-c.eu", "GEO-C project")
                     )
                   })
                   
@@ -457,63 +457,72 @@ server <- function(input, output, session) {
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Athens')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_berlin <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Berlin')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_brussels <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Brussels')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_lisbon <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Lisbon')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_london <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('London')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_madrid <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Madrid')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_paris <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Paris')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_rome <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Rome')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   tb_warsaw <- reactive({
     tb_decade %>%
       filter(between(year(date),input$decadeSelected[1], input$decadeSelected[2])) %>%
       filter(city %in% c('Warsaw')) %>%
-      filter(index %in% input$indexSelected)
+      filter(index %in% input$indexSelected) %>%
+      select(-decade) 
   })
   
   
@@ -584,10 +593,13 @@ server <- function(input, output, session) {
 
       hc_credits(enabled = TRUE,
                  text = "Sources: CORDEX, GEO-C",
-                 href = "http://geo-c-eu",
+                 href = "http://geo-c.eu",
                  style = list(fontSize = "10px")) %>%
-      hc_exporting(enabled = TRUE) # enable exporting option
-  
+      hc_exporting(enabled = TRUE, # enable exporting option
+                   showTable = TRUE,
+                   filename = "data",
+                   csv = list (dateFormat = "%Y-%m-%d"))
+    
     
     # Print highchart 
     hc  
@@ -830,7 +842,7 @@ server <- function(input, output, session) {
       
       hc_credits(enabled = TRUE,
                  text = "Sources: CORDEX, GEO-C",
-                 href = "http://geo-c-eu",
+                 href = "http://geo-c.eu",
                  style = list(fontSize = "10px")) %>%
       hc_exporting(enabled = TRUE) # enable exporting option
     
@@ -1014,7 +1026,7 @@ server <- function(input, output, session) {
       
       hc_credits(enabled = TRUE,
                  text = "Sources: CORDEX, GEO-C",
-                 href = "http://geo-c-eu",
+                 href = "http://geo-c.eu",
                  style = list(fontSize = "10px")) %>%
       hc_exporting(enabled = TRUE) # enable exporting option
     
