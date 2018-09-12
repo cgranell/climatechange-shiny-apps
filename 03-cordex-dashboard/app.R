@@ -420,7 +420,7 @@ server <- function(input, output, session) {
     
     current_index = input$indexSelected
     valueBox(
-      value = current_index,
+      value = paste(current_index, selected_units()),
       subtitle = "Selected index",
       color = "red",
       icon = icon("list")
@@ -524,8 +524,14 @@ server <- function(input, output, session) {
     decades[index_year_min:index_year_max]
   })
   
-  
-  
+  # Units of the indices to be showed in th Y-axis
+  selected_units <- reactive({
+    if (input$indexSelected =="hwmid") {
+      c(" [0, +infinity]")
+    } else {  # tn10p, tn90p, tx10p, tx90p
+      c(" [% of days]")
+    }
+  })
   
   
   # Highchart -------------------------------------------------------
@@ -562,7 +568,7 @@ server <- function(input, output, session) {
         categories = selected_decades()) %>%
 
       hc_yAxis(
-        title = list(text = input$indexSelected),
+        title = list(text = paste(input$indexSelected, selected_units())),
         min = 0,
         tickInterval = 5,
         minorTickInterval = 2.5) %>%
@@ -640,7 +646,7 @@ server <- function(input, output, session) {
     
     current_index = input$yearIndexSelected
     valueBox(
-      value = current_index,
+      value = paste(current_index, year_selected_units()),
       subtitle = "Selected index",
       color = "red",
       icon = icon("list")
@@ -770,6 +776,19 @@ server <- function(input, output, session) {
     years_list[index_year_min:index_year_max]
   })
   
+  # Units of the indices to be showed in th Y-axis
+  year_selected_units <- reactive({
+    if (input$yearIndexSelected =="HWMId") {
+      c(" [0, +infinity]")
+    } else if (input$yearIndexSelected =="TNn") { #} | input$yearIndexSelected =="TNx" | input$yearIndexSelected =="TXx")  {
+      c(" [K]")
+    } else { # tn10p, tn90p, tx10p, tx90p
+      c(" [% of days]")
+    }
+  
+  })
+  
+  
   
   # Highchart -------------------------------------------------------
   output$yearHighChart <- renderHighchart({
@@ -795,7 +814,7 @@ server <- function(input, output, session) {
         categories = selected_years()) %>%
       
       hc_yAxis(
-        title = list(text = input$yearIndexSelected),
+        title = list(text = input$yearIndexSelected), #paste(input$yearIndexSelected, year_selected_units())),
         min = 0,
         tickInterval = 5,
         minorTickInterval = 2.5) %>%
@@ -886,7 +905,7 @@ server <- function(input, output, session) {
 
   
   ########################
-  ## DECADAL ENSENBLE MEAN PAGE
+  ## DECADAL ENSEMBLE MEAN PAGE
   ########################
   
   
@@ -904,7 +923,7 @@ server <- function(input, output, session) {
   
   output$ensembleIndexInfo <- renderInfoBox({
     
-    current_index <- "HWMId"
+    current_index <- "HWMId [0, +infinity]"
     valueBox(
       value = current_index,
       subtitle = "Selected index",
@@ -979,7 +998,7 @@ server <- function(input, output, session) {
         categories = ensemble_selected_decades()) %>%
       
       hc_yAxis(
-        title = list(text = input$ensembleIndexSelected),
+        title = list(text = c("HWMId [0, +infinity]")),
         min = 0,
         tickInterval = 5,
         minorTickInterval = 2.5) %>%
