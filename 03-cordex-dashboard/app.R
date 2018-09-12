@@ -814,7 +814,7 @@ server <- function(input, output, session) {
         categories = selected_years()) %>%
       
       hc_yAxis(
-        title = list(text = input$yearIndexSelected), #paste(input$yearIndexSelected, year_selected_units())),
+        title = list(text = paste(input$yearIndexSelected, year_selected_units())),
         min = 0,
         tickInterval = 5,
         minorTickInterval = 2.5) %>%
