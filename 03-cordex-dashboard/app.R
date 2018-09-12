@@ -780,7 +780,7 @@ server <- function(input, output, session) {
   year_selected_units <- reactive({
     if (input$yearIndexSelected =="HWMId") {
       c(" [0, +infinity]")
-    } else if (input$yearIndexSelected =="TNn") { #} | input$yearIndexSelected =="TNx" | input$yearIndexSelected =="TXx")  {
+    } else if (input$yearIndexSelected =="TNn" | input$yearIndexSelected =="TNx" | input$yearIndexSelected =="TXx")  {
       c(" [K]")
     } else { # tn10p, tn90p, tx10p, tx90p
       c(" [% of days]")
