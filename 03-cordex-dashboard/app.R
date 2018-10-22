@@ -347,7 +347,7 @@ body <- dashboardBody(
               box(title = "Related publications and resources", status = "warning", width = 12,
                   withTags({
                     div(class="header", checked=NA,
-                        p(class = "text-muted", "Smid, M., & Costa, A. C. (2017). Climate projections and downscaling techniques: a discussion for impact studies in urban systems. International Journal of Urban Sciences, 22:3, 277-307."),
+                        p(class = "text-muted", "Smid, M., & Costa, A. C. (2018). Climate projections and downscaling techniques: a discussion for impact studies in urban systems. International Journal of Urban Sciences, 22:3, 277-307."),
                         p(class = "text-muted", "Smid, M., Russo, S., Costa, A. C., Granell, C., & Pebesma, E. (2018). Ranking European capitals by exposure to heat waves and cold waves. Submitted to Urban Climate."),
                         
                         p(class = "text-muted", 
